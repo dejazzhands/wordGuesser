@@ -3,11 +3,42 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
+import java.util.Set;
 import java.util.function.Consumer;
 
 
 
 public class Client extends Thread{
+
+	private String name;
+	private Category category;
+	private String wordToGuess;
+	private Set<Character> guessedLetters;
+	private int remainingGuesses;
+	private int correctGuesses;
+	private int categoryAttempts;
+
+	public boolean guessLetter(char letter){
+		//check if letter is in word
+		
+
+	}
+
+	public int getRemainingGuesses(){
+
+	}
+
+	public boolean isGameWon(){
+
+	}
+
+	public boolean isGameOver(){
+
+	}
+
+	public void chooseCategory(Category category){
+
+	}
 
 	
 	Socket socketClient;
