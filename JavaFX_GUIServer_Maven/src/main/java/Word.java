@@ -1,7 +1,14 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class Word {
+public class Word extends Client{
+    Word(Consumer<Serializable> call) {
+        super(call);
+        //TODO Auto-generated constructor stub
+    }
+
     public String value;
 
     public boolean isGuessed(char letter){
@@ -9,9 +16,9 @@ public class Word {
         //if it is, add it to guessedLetters
         //if it isn't, decrement remainingGuesses
 
-        for (int i = 0; i < value.length(); i++) {
-            if (value.charAt(i) == letter) {
-                guessedLetters.add(letter);
+        for(int i = 0; i < value.length(); i++){
+            if(value.charAt(i) == letter){
+                getGuessedLetters().add(letter);
                 return true;
             }
         }
@@ -54,6 +61,13 @@ public class Word {
     }
 
     public void resetWord(){
-
+        //reset guessedLetters
+        //reset remainingGuesses
+        //reset correctGuesses
+        //reset categoryAttempts
+        getGuessedLetters().clear();
+        setRemainingGuesses(6);
+        setCorrectGuesses(0);
+        setCategoryAttempts(3);
     }
 }

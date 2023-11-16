@@ -68,11 +68,31 @@ public class Server{
 				this.count = count;	
 			}
 			
-			public void updateClients(String message) {
+			public void updateClients(wordGuesserInfo message) {
 				for(int i = 0; i < clients.size(); i++) {
 					ClientThread t = clients.get(i);
 					try {
 					 t.out.writeObject(message);
+					}
+					catch(Exception e) {}
+				}
+			}
+
+			//start the game
+			public void startGame() {
+				for(int i = 0; i < clients.size(); i++) {
+					try {
+						wordGuesserInfo data = new wordGuesserInfo();
+						//variables from wordGuesserInfo
+						data.setNumLetters(0);
+						data.setCorrectLetterGuess(false);
+						data.setRemainingGuesses(6);
+						data.setCurrentCategory("");
+						data.setGuessedWords(new ArrayList<String>());
+						data.setWin(false);
+						data.setGameOver(false);
+						ClientThread t = clients.get(i);
+						t.out.writeObject(data);
 					}
 					catch(Exception e) {}
 				}
@@ -89,18 +109,16 @@ public class Server{
 					System.out.println("Streams not open");
 				}
 				
-				updateClients("new client on server: client #"+count);
+				// updateClients("new client on server: client #"+count);
 					
 				 while(true) {
 					    try {
-					    	String data = in.readObject().toString();
+					    	wordGuesserInfo data = (wordGuesserInfo) in.readObject();
 					    	callback.accept("client: " + count + " sent: " + data);
-					    	updateClients("client #"+count+" said: "+data);
-					    	
+					    	updateClients(data);
 					    	}
 					    catch(Exception e) {
 					    	callback.accept("OOOOPPs...Something wrong with the socket from client: " + count + "....closing down!");
-					    	updateClients("Client #"+count+" has left the server!");
 					    	clients.remove(this);
 					    	break;
 					    }

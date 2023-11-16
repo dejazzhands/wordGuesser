@@ -9,67 +9,40 @@ import java.util.function.Consumer;
 
 
 public class Client extends Thread{
-
-	private String name;
-	private Category category;
-	private String wordToGuess;
-	private Set<Character> guessedLetters;
-	private int remainingGuesses;
-	private int correctGuesses;
-	private int categoryAttempts;
-
-	public boolean guessLetter(char letter){
-		//check if letter is in word
-		
-
-	}
-
-	public int getRemainingGuesses(){
-
-	}
-
-	public boolean isGameWon(){
-
-	}
-
-	public boolean isGameOver(){
-
-	}
-
-	public void chooseCategory(Category category){
-
-	}
-
 	
 	Socket socketClient;
-	
 	ObjectOutputStream out;
 	ObjectInputStream in;
-	
+	int port;
+	String host;
+
 	private Consumer<Serializable> callback;
 	
 	Client(Consumer<Serializable> call){
-	
 		callback = call;
 	}
 	
 	public void run() {
 		
 		try {
-		socketClient= new Socket("127.0.0.1",5555);
-	    out = new ObjectOutputStream(socketClient.getOutputStream());
-	    in = new ObjectInputStream(socketClient.getInputStream());
-	    socketClient.setTcpNoDelay(true);
+			socketClient= new Socket("127.0.0.1",5555);
+			out = new ObjectOutputStream(socketClient.getOutputStream());
+			in = new ObjectInputStream(socketClient.getInputStream());
+			socketClient.setTcpNoDelay(true);
 		}
-		catch(Exception e) {}
+		catch(Exception e) {
+			System.out.println("Client error");
+		}
 		
 		while(true) {
 			 
 			try {
-			String message = in.readObject().toString();
-			callback.accept(message);
+				wordGuesserInfo message = (wordGuesserInfo) in.readObject();
+				callback.accept(message);
 			}
-			catch(Exception e) {}
+			catch(Exception e) {
+				System.out.println(e);
+			}
 		}
 	
     }
