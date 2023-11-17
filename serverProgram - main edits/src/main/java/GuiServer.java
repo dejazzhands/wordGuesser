@@ -116,7 +116,6 @@ public class GuiServer extends Application{
                 System.exit(0);
             }
         });
-		
 		 
 		
 		primaryStage.setScene(startScene);

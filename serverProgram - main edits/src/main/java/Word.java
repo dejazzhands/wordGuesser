@@ -3,13 +3,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class Word extends Client{
-    Word(Consumer<Serializable> call) {
-        super(call);
+
+public class Word extends Client implements Serializable{
+    Word(Consumer<wordGuesserInfo> onReceiveCallback){
         //TODO Auto-generated constructor stub
+        super(onReceiveCallback);
     }
 
-    public String value;
+    public String value;    
 
     public boolean isGuessed(char letter){
         //check if letter is in word
@@ -60,12 +61,16 @@ public class Word extends Client{
 
     }
 
-    // public void resetWord(){
-    //     //reset word to original state
-    //     //reset guessedLetters
-    //     //reset remainingGuesses
+    public void resetWord(){
+        //reset word to initial state
+        //reset guessedLetters
+        //reset remainingGuesses
+        //reset correctGuesses
+        //reset categoryAttempts
 
-    //     getGuessedLetters().clear();
-    //     setRemainingGuesses(10);
-    // }
+        getGuessedLetters().clear();
+        setRemainingGuessesPerWord(6);
+        setCorrectGuesses(0);
+        setCategoryAttempts(0);
+    }
 }

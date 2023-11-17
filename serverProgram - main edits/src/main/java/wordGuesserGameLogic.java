@@ -1,50 +1,93 @@
 import javafx.application.Platform;
-import javafx.beans.binding.When;
 
 import java.util.ArrayList;
 
-
 public class wordGuesserGameLogic {
-    //this class contains all logic that were placed inside Client.java in the wireframe
     private String name;
     private ArrayList<Category> categories;
     private Word wordToGuess;
     private ArrayList<Character> guessedLetters;
-    private int remainingGuesses;
+    private int remainingGuessesPerWord;
     private int correctGuesses;
     private int categoryAttempts;
 
-    public boolean guessLetter(char letter){
-        //check if letter is in word
-        //if it is, add it to guessedLetters
-        //if it isn't, decrement remainingGuesses
+    public wordGuesserGameLogic(String name, ArrayList<Category> categories) {
+        this.name = name;
+        this.categories = categories;
+        this.guessedLetters = new ArrayList<>();
+        this.remainingGuessesPerWord = 3;
+        this.correctGuesses = 0;
+        this.categoryAttempts = 0;
+    }
 
-        if(wordToGuess.isGuessed(letter)){
+    public void guessLetter(char letter) {
+        if (!guessedLetters.contains(letter)) {
             guessedLetters.add(letter);
-            correctGuesses++;
+            if (wordToGuess.isGuessed(letter)) {
+                // Correct guess
+                correctGuesses++;
+            } else {
+                // Incorrect guess
+                remainingGuessesPerWord--;
+            }
+        }
+    }
+
+    public void handleCategorySelection() {
+        if (correctGuesses == 0 && remainingGuessesPerWord > 0) {
+            // Client guessed the word within 6 letter guesses
+            // They cannot guess another word in the same category but must choose from the two remaining
+            resetForNextCategory();
+        } else {
+            // Client did not guess the word correctly or used all guesses
+            // They are free to choose from any of the three categories for another word
+            categoryAttempts++;
+            if (categoryAttempts < 3) {
+                resetForNextCategory();
+            }
+        }
+    }
+
+    public int getRemainingGuessesPerWord() {
+        return remainingGuessesPerWord;
+    }
+
+    public boolean isGameWon() {
+        return correctGuesses == 3;
+    }
+
+    public boolean isGameOver() {
+        if (remainingGuessesPerWord == 0 || categoryAttempts == 3) {
+            // Game over conditions: out of chances of guessing or max category attempts reached
             return true;
-        }
-        else{
-            remainingGuesses--;
-            return false;
-        }
+        } 
+        return false;
     }
 
-    //getRemainingGuesses method to check remaining guesses after a guess
-    public int getRemainingGuesses(){
-        return remainingGuesses;
+    private void resetForNextCategory() {
+        guessedLetters.clear();
+        remainingGuessesPerWord = 6;
+        correctGuesses = 0;
     }
 
-    
 
-    // If the client guesses the word within 6 letter guesses, they can not guess at another
-    // word in the same category but must chose from the two remaining. If they do not guess
-    // the word correctly, they are free to choose from any of the three categories for another
-    // word. Clients may guess at a maximum of three words per category. If they do not make
-    // a correct guess within three attempts, the game is over. The game is won when the
-    // client successfully guesses one word in each category. When the game is over, the
-    // client can either play again or quit. 
+    public void setWordToGuess(Word wordToGuess) {
+        this.wordToGuess = wordToGuess;
+    }
 
+    public void setCategories(ArrayList<Category> categories) {
+        this.categories = categories;
+    }
 
-    
+    public String getCategoryName() {
+        return name;
+    }
+
+    public ArrayList<Category> getCategories() {
+        return categories;
+    }
+
+    public int getCategoryAttempts() {
+        return categoryAttempts;
+    }
 }
