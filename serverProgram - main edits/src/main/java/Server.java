@@ -43,7 +43,7 @@ public class Server{
 				callback.accept("client has connected to server: " + "client #" + count);
 				clients.add(c);
 				c.start();
-				
+				c.startGame();
 				count++;
 				
 			    }
@@ -74,7 +74,9 @@ public class Server{
 					try {
 					 t.out.writeObject(message);
 					}
-					catch(Exception e) {}
+					catch(Exception e) {
+						System.out.println("Error in updateClients");
+					}
 				}
 			}
 
@@ -82,17 +84,10 @@ public class Server{
 			public void startGame() {
 				for(int i = 0; i < clients.size(); i++) {
 					try {
-						wordGuesserInfo data = new wordGuesserInfo();
-						//variables from wordGuesserInfo
-						data.setNumLetters(0);
-						data.setCorrectLetterGuess(false);
-						data.setRemainingGuesses(6);
-						data.setCurrentCategory("");
-						data.setGuessedWords(new ArrayList<String>());
-						data.setWin(false);
-						data.setGameOver(false);
-						ClientThread t = clients.get(i);
-						t.out.writeObject(data);
+						//start a new game by initializing wordGuesserInfo
+						wordGuesserInfo info = new wordGuesserInfo();
+						//use default values, just write it out to the client
+						clients.get(i).out.writeObject(info);
 					}
 					catch(Exception e) {
 						System.out.println("Error in startGame");
@@ -111,7 +106,7 @@ public class Server{
 					System.out.println("Streams not open");
 				}
 				
-				updateClients(new wordGuesserInfo("new client on server: client #"+count));
+				updateClients(null);
 				while(true){
 					try {
 						wordGuesserInfo data = (wordGuesserInfo) in.readObject();

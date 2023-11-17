@@ -19,7 +19,6 @@ public class Word extends Client implements Serializable{
 
         for(int i = 0; i < value.length(); i++){
             if(value.charAt(i) == letter){
-                getGuessedLetters().add(letter);
                 return true;
             }
         }
@@ -67,10 +66,6 @@ public class Word extends Client implements Serializable{
         //reset remainingGuesses
         //reset correctGuesses
         //reset categoryAttempts
-
-        getGuessedLetters().clear();
-        setRemainingGuessesPerWord(6);
-        setCorrectGuesses(0);
-        setCategoryAttempts(0);
+        
     }
 }

@@ -80,4 +80,15 @@ public class wordGuesserInfo implements Serializable {
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
     }
+
+    public wordGuesserInfo() {
+        this.numLetters = 0;
+        this.correctLetterGuess = false;
+        this.remainingGuesses = 0;
+        this.currentCategory = "";
+        this.guessedWords = new ArrayList<>();
+        this.win = false;
+        this.gameOver = false;
+    }
+    
 }

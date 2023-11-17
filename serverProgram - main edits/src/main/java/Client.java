@@ -3,6 +3,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.function.Consumer;
+import java.io.Serializable;
+import java.util.ArrayList;
+
 
 public class Client extends Thread {
 
@@ -11,9 +14,9 @@ public class Client extends Thread {
     ObjectInputStream in;
 
     private Consumer<Serializable> callback;
-    private Consumer<WordGuesserInfo> wordguessInfo;
+    private Consumer<wordGuesserInfo> wordguessInfo;
 
-    Client(Consumer<WordGuesserInfo> wordguessInfo) {
+    Client(Consumer<wordGuesserInfo> wordguessInfo) {
         
     }
 
@@ -29,7 +32,7 @@ public class Client extends Thread {
 
         while (true) {
             try {
-                WordGuesserInfo message = (WordGuesserInfo) in.readObject();
+                wordGuesserInfo message = (wordGuesserInfo) in.readObject();
                 wordguessInfo.accept(message);
             } catch (Exception e) {
                 System.out.println(e);
