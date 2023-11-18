@@ -27,14 +27,15 @@ public class GuiServer extends Application{
 	GridPane grid;
 	HBox buttonBox;
 	VBox clientBox;
-	Scene startScene;
+	Scene startScene;3
 	BorderPane startPane;
 	Server serverConnection;
 	Client clientConnection;
 	
 	ListView<String> listItems, listItems2;
 	
-	
+	wordGuesserInfo info = new wordGuesserInfo();
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		launch(args);
@@ -49,31 +50,18 @@ public class GuiServer extends Application{
 		this.serverChoice.setStyle("-fx-pref-width: 300px");
 		this.serverChoice.setStyle("-fx-pref-height: 300px");
 		
-		this.serverChoice.setOnAction(e->{ primaryStage.setScene(sceneMap.get("server"));
-											primaryStage.setTitle("This is the Server");
-				serverConnection = new Server(data -> {
-					Platform.runLater(()->{
-						listItems.getItems().add(data.toString());
-					});
-
+		this.serverChoice.setOnAction(e -> { 
+			primaryStage.setScene(sceneMap.get("server"));
+			primaryStage.setTitle("This is the Server");
+			serverConnection = new Server(data -> {
+				Platform.runLater(()->{
+					listItems.getItems().add(data.toString());
 				});
+
+			});
 											
 		});
 		
-		
-		this.clientChoice = new Button("Client");
-		this.clientChoice.setStyle("-fx-pref-width: 300px");
-		this.clientChoice.setStyle("-fx-pref-height: 300px");
-		
-		this.clientChoice.setOnAction(e-> {primaryStage.setScene(sceneMap.get("client"));
-											primaryStage.setTitle("This is a client");
-											clientConnection = new Client(data->{
-							Platform.runLater(()->{listItems2.getItems().add(data.toString());
-											});
-							});
-							
-											clientConnection.start();
-		});
 		
 		this.buttonBox = new HBox(400, serverChoice, clientChoice);
 		startPane = new BorderPane();
@@ -85,30 +73,10 @@ public class GuiServer extends Application{
 		listItems = new ListView<String>();
 		listItems2 = new ListView<String>();
 		
-		c1 = new TextField();
-		b1 = new Button("Send");
-
-		b1.setOnAction(e -> {
-			// Create a wordGuesserInfo object with the necessary information
-			wordGuesserInfo info = new wordGuesserInfo();
-			// Set the fields of the wordGuesserInfo object based on your requirements
-			info.setNumLetters(0);
-			info.setCorrectLetterGuess(false);
-			info.setRemainingGuesses(6);
-			info.setCurrentCategory("");
-			info.setGuessedWords(new ArrayList<String>());
-			info.setWin(false);
-			info.setGameOver(false);
-			// Send the wordGuesserInfo object
-			clientConnection.send(info);
-			c1.clear();
-		});
-		
 		
 		sceneMap = new HashMap<String, Scene>();
 		
 		sceneMap.put("server",  createServerGui());
-		sceneMap.put("client",  createClientGui());
 		
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
@@ -137,12 +105,5 @@ public class GuiServer extends Application{
 		
 	}
 	
-	public Scene createClientGui() {
-		
-		clientBox = new VBox(10, c1,b1,listItems2);
-		clientBox.setStyle("-fx-background-color: blue");
-		return new Scene(clientBox, 400, 300);
-		
-	}
 
 }

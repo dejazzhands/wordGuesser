@@ -1,14 +1,14 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 
-public class Word extends Client implements Serializable{
-    Word(Consumer<wordGuesserInfo> onReceiveCallback){
+public class Word implements Serializable{
+    Word(String value) {
         //TODO Auto-generated constructor stub
-        super(onReceiveCallback);
+        this.value = value;
     }
+
 
     public String value;    
 
@@ -69,3 +69,4 @@ public class Word extends Client implements Serializable{
         
     }
 }
+

@@ -28,14 +28,17 @@ public class Client extends Thread {
             socketClient.setTcpNoDelay(true);
         } catch (Exception e) {
             System.out.println("Client error");
+            e.printStackTrace();
         }
 
         while (true) {
             try {
+                //accept wordGuesserInfo that is not null
                 wordGuesserInfo message = (wordGuesserInfo) in.readObject();
                 wordguessInfo.accept(message);
             } catch (Exception e) {
-                System.out.println(e);
+                System.out.println("Client error");
+                e.printStackTrace();    
             }
         }
     }

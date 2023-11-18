@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.Objects;
 
 import javafx.application.Platform;
 import javafx.scene.control.ListView;
@@ -33,20 +34,18 @@ public class Server{
 		
 		public void run() {
 		
-			try(ServerSocket mysocket = new ServerSocket(5555);){
-		    System.out.println("Server is waiting for a client!");
+			try(ServerSocket mysocket = new ServerSocket(5555)){
+		    	System.out.println("Server is waiting for a client!");
 		  
+				while(true) {
 			
-		    while(true) {
-		
-				ClientThread c = new ClientThread(mysocket.accept(), count);
-				callback.accept("client has connected to server: " + "client #" + count);
-				clients.add(c);
-				c.start();
-				
-				count++;
-				
-			    }
+					ClientThread c = new ClientThread(mysocket.accept(), count);
+					callback.accept("client has connected to server: " + "client #" + count);
+					clients.add(c);
+					c.start();
+					count++;
+					
+				}
 			}//end of try
 				catch(Exception e) {
 					callback.accept("Server socket did not launch");
@@ -56,7 +55,6 @@ public class Server{
 	
 
 		class ClientThread extends Thread{
-			
 		
 			Socket connection;
 			int count;
@@ -68,13 +66,15 @@ public class Server{
 				this.count = count;	
 			}
 			
-			public void updateClients(wordGuesserInfo message) {
+			public void updateClients(wordGuesserInfo message){
 				for(int i = 0; i < clients.size(); i++) {
 					ClientThread t = clients.get(i);
 					try {
 					 t.out.writeObject(message);
 					}
-					catch(Exception e) {}
+					catch(Exception e) {
+						System.out.println("Error in updateClients");
+					}
 				}
 			}
 
@@ -82,19 +82,25 @@ public class Server{
 			public void startGame() {
 				for(int i = 0; i < clients.size(); i++) {
 					try {
-						wordGuesserInfo data = new wordGuesserInfo();
-						//variables from wordGuesserInfo
-						data.setNumLetters(0);
-						data.setCorrectLetterGuess(false);
-						data.setRemainingGuesses(6);
-						data.setCurrentCategory("");
-						data.setGuessedWords(new ArrayList<String>());
-						data.setWin(false);
-						data.setGameOver(false);
+						//start a new game by initializing wordGuesserInfo
+						wordGuesserInfo info = new wordGuesserInfo();
+
+						//set the default values to prevent null pointer error
+						info.setGuessedWords(new ArrayList<String>());
+						info.setRemainingGuesses(6);
+						info.setNumLetters(0);
+						info.setCurrentCategory("");
+						info.setCorrectLetterGuess(false);
+						info.setGameOver(false);
+						info.setWin(false);
+
+						//use default values, just write it out to the client
 						ClientThread t = clients.get(i);
-						t.out.writeObject(data);
+						t.out.writeObject(info);
 					}
-					catch(Exception e) {}
+					catch(Exception e) {
+						System.out.println("Error in startGame");
+					}
 				}
 			}
 			
@@ -103,27 +109,50 @@ public class Server{
 				try {
 					in = new ObjectInputStream(connection.getInputStream());
 					out = new ObjectOutputStream(connection.getOutputStream());
-					connection.setTcpNoDelay(true);	
+					connection.setTcpNoDelay(true);
 				}
 				catch(Exception e) {
 					System.out.println("Streams not open");
 				}
 				
-				// updateClients("new client on server: client #"+count);
-					
-				 while(true) {
-					    try {
-					    	wordGuesserInfo data = (wordGuesserInfo) in.readObject();
-					    	callback.accept("client: " + count + " sent: " + data);
-					    	updateClients(data);
-					    	}
-					    catch(Exception e) {
-					    	callback.accept("OOOOPPs...Something wrong with the socket from client: " + count + "....closing down!");
-					    	clients.remove(this);
-					    	break;
-					    }
+				if (count == 1){
+					startGame();
+				}
+
+				while(true){
+					try {
+						wordGuesserInfo data = (wordGuesserInfo) in.readObject();
+						callback.accept("client: " + count + " sent: " + data);
+						updateClients(data);
 					}
+					catch(Exception e) {
+						callback.accept("OOOOPPs...Something wrong with the socket from client: " + count + "....closing down!");
+						clients.remove(this);
+						break;
+					}
+				}
+
+
+
+
+
+				//update a client and then start the game
+
+				// updateClients("new client on server: client #"+count);
+				//  while(true) {
+				// 	    try {
+				// 	    	wordGuesserInfo data = (wordGuesserInfo) in.readObject();
+				// 	    	callback.accept("client: " + count + " sent: " + data);
+				// 	    	updateClients(data);
+				// 	    	}
+				// 	    catch(Exception e) {
+				// 	    	callback.accept("OOOOPPs...Something wrong with the socket from client: " + count + "....closing down!");
+				// 	    	clients.remove(this);
+				// 	    	break;
+				// 	    }
+				// 	}
 				}//end of run
+
 			
 			
 		}//end of client thread

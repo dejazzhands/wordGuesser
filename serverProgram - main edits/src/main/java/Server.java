@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.Objects;
 
 import javafx.application.Platform;
 import javafx.scene.control.ListView;
@@ -33,20 +34,18 @@ public class Server{
 		
 		public void run() {
 		
-			try(ServerSocket mysocket = new ServerSocket(5555);){
-		    System.out.println("Server is waiting for a client!");
+			try(ServerSocket mysocket = new ServerSocket(5555)){
+		    	System.out.println("Server is waiting for a client!");
 		  
+				while(true) {
 			
-		    while(true) {
-		
-				ClientThread c = new ClientThread(mysocket.accept(), count);
-				callback.accept("client has connected to server: " + "client #" + count);
-				clients.add(c);
-				c.start();
-				c.startGame();
-				count++;
-				
-			    }
+					ClientThread c = new ClientThread(mysocket.accept(), count);
+					callback.accept("client has connected to server: " + "client #" + count);
+					clients.add(c);
+					c.start();
+					count++;
+					
+				}
 			}//end of try
 				catch(Exception e) {
 					callback.accept("Server socket did not launch");
@@ -56,7 +55,6 @@ public class Server{
 	
 
 		class ClientThread extends Thread{
-			
 		
 			Socket connection;
 			int count;
@@ -68,7 +66,7 @@ public class Server{
 				this.count = count;	
 			}
 			
-			public void updateClients(wordGuesserInfo message) {
+			public void updateClients(wordGuesserInfo message){
 				for(int i = 0; i < clients.size(); i++) {
 					ClientThread t = clients.get(i);
 					try {
@@ -86,8 +84,19 @@ public class Server{
 					try {
 						//start a new game by initializing wordGuesserInfo
 						wordGuesserInfo info = new wordGuesserInfo();
+
+						//set the default values to prevent null pointer error
+						info.setGuessedWords(new ArrayList<String>());
+						info.setRemainingGuesses(6);
+						info.setNumLetters(0);
+						info.setCurrentCategory("");
+						info.setCorrectLetterGuess(false);
+						info.setGameOver(false);
+						info.setWin(false);
+
 						//use default values, just write it out to the client
-						clients.get(i).out.writeObject(info);
+						ClientThread t = clients.get(i);
+						t.out.writeObject(info);
 					}
 					catch(Exception e) {
 						System.out.println("Error in startGame");
@@ -100,13 +109,16 @@ public class Server{
 				try {
 					in = new ObjectInputStream(connection.getInputStream());
 					out = new ObjectOutputStream(connection.getOutputStream());
-					connection.setTcpNoDelay(true);	
+					connection.setTcpNoDelay(true);
 				}
 				catch(Exception e) {
 					System.out.println("Streams not open");
 				}
 				
-				updateClients(null);
+				if (count == 1){
+					startGame();
+				}
+
 				while(true){
 					try {
 						wordGuesserInfo data = (wordGuesserInfo) in.readObject();

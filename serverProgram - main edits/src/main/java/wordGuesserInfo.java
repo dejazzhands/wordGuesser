@@ -2,6 +2,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class wordGuesserInfo implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     // Number of letters for the current word being guessed
     private int numLetters;
     

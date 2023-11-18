@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import java.util.ArrayList;
 
 public class GuiServer extends Application{
 
@@ -48,14 +49,15 @@ public class GuiServer extends Application{
 		this.serverChoice.setStyle("-fx-pref-width: 300px");
 		this.serverChoice.setStyle("-fx-pref-height: 300px");
 		
-		this.serverChoice.setOnAction(e->{ primaryStage.setScene(sceneMap.get("server"));
-											primaryStage.setTitle("This is the Server");
-				serverConnection = new Server(data -> {
-					Platform.runLater(()->{
-						listItems.getItems().add(data.toString());
-					});
-
+		this.serverChoice.setOnAction(e -> { 
+			primaryStage.setScene(sceneMap.get("server"));
+			primaryStage.setTitle("This is the Server");
+			serverConnection = new Server(data -> {
+				Platform.runLater(()->{
+					listItems.getItems().add(data.toString());
 				});
+
+			});
 											
 		});
 		
@@ -66,10 +68,10 @@ public class GuiServer extends Application{
 		
 		this.clientChoice.setOnAction(e-> {primaryStage.setScene(sceneMap.get("client"));
 											primaryStage.setTitle("This is a client");
-											clientConnection = new Client(data->{
-							Platform.runLater(()->{listItems2.getItems().add(data.toString());
+											clientConnection = new Client(data->{Platform.runLater(()->{
+												listItems2.getItems().add(data.toString());
+												});
 											});
-							});
 							
 											clientConnection.start();
 		});
@@ -84,6 +86,7 @@ public class GuiServer extends Application{
 		listItems = new ListView<String>();
 		listItems2 = new ListView<String>();
 		
+
 		c1 = new TextField();
 		b1 = new Button("Send");
 
@@ -116,7 +119,6 @@ public class GuiServer extends Application{
                 System.exit(0);
             }
         });
-		
 		 
 		
 		primaryStage.setScene(startScene);
