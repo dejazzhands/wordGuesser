@@ -1,4 +1,3 @@
-
 import java.util.HashMap;
 
 import javafx.application.Application;
@@ -17,20 +16,20 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import java.util.ArrayList;
+import javafx.scene.control.Alert;
 
-public class GuiServer extends Application{
-
+public class GuiServer extends Application {
 	
-	TextField s1,s2,s3,s4, c1;
-	Button serverChoice,clientChoice,b1;
+	TextField portNumber;
+	Button serverChoice, clientChoice, b1;
 	HashMap<String, Scene> sceneMap;
-	GridPane grid;
 	HBox buttonBox;
-	VBox clientBox;
-	Scene startScene;3
+	Scene startScene;
 	BorderPane startPane;
 	Server serverConnection;
 	Client clientConnection;
+	VBox serverBox;
+
 	
 	ListView<String> listItems, listItems2;
 	
@@ -58,16 +57,19 @@ public class GuiServer extends Application{
 					listItems.getItems().add(data.toString());
 				});
 
-			});
+			}, Integer.parseInt(portNumber.getText())); // Pass the port number here
 											
 		});
 		
-		
-		this.buttonBox = new HBox(400, serverChoice, clientChoice);
+		serverBox = new VBox();
+		portNumber = new TextField(); // Add this line to create a TextField for the port number
+		portNumber.setPromptText("Enter port number"); // Add this line to set the prompt text for the TextField
+
+		this.buttonBox = new HBox(400, serverChoice, portNumber); // Add the TextField to the HBox
 		startPane = new BorderPane();
 		startPane.setPadding(new Insets(70));
 		startPane.setCenter(buttonBox);
-		
+
 		startScene = new Scene(startPane, 800,800);
 		
 		listItems = new ListView<String>();
@@ -92,6 +94,7 @@ public class GuiServer extends Application{
 		
 	}
 	
+
 	public Scene createServerGui() {
 		
 		BorderPane pane = new BorderPane();
@@ -101,7 +104,6 @@ public class GuiServer extends Application{
 		pane.setCenter(listItems);
 	
 		return new Scene(pane, 500, 400);
-		
 		
 	}
 	

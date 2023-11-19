@@ -61,7 +61,7 @@ public class Word implements Serializable{
     }
 
     public void resetWord(){
-        //reset word to initial state
+        //reset word to initial state, making sure that there is no intersection with the wordguesser class before merging
         //reset guessedLetters
         //reset remainingGuesses
         //reset correctGuesses
