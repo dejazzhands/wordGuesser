@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.beans.EventHandler;
@@ -24,12 +25,15 @@ import java.util.Optional;
 public class Game extends Application {
 
     TextField letterGuess, categoryChoice, portNumber, ipAddress, winDisplay = new TextField();
-    Button startServer;
+    Button startClient;
     Stage primaryStage;
     HBox letterBox;
     Word targetWord;
     int remainingAttempts;
     Map<Character, Square> letterSquares;
+
+    HashMap<String, Scene> sceneMap;
+    
 
     BorderPane startPane;
     Client clientConnection;
@@ -42,54 +46,6 @@ public class Game extends Application {
         launch(args);
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-            this.primaryStage = primaryStage;
-            this.primaryStage.setTitle("Word Guesser Game");
-
-            //write title text on top of the image
-            Text title = new Text("Word Guesser");
-            //size of title should be big
-            title.setStyle("-fx-font-size: 50px");
-            title.setFill(Color.WHITE);
-
-            // create a pane to display word guesser 1 .png in the center
-            startPane = new BorderPane();
-            Image myImage = new Image("word guesser 1.png");
-            //place image in the center
-            startPane.setCenter(new ImageView(myImage));
-            //color startPane background with FFEBE0B
-            startPane.setStyle("-fx-background-color: #FFBE0B");
-
-            //button to connect to server and textfield
-            startServer = new Button("Connect to Server");
-            portNumber = new TextField();
-
-            startPane.setTop(title);
-            startPane.setBottom(startServer);
-            startPane.setLeft(portNumber);
-
-            Scene startScene = new Scene(startPane, 900, 600);
-            primaryStage.setScene(startScene);
-            primaryStage.show();
-    }
-
-    // private void connectToServer(ActionEvent event) {
-    //     if (!portNumber.getText().isEmpty()) {
-    //         int port = Integer.parseInt(portNumber.getText());
-    //         String host = "localhost";  // Change this if your server is on a different machine
-    //         clientConnection = new Client(host, port, data -> {
-    //             Platform.runLater(() -> {
-    //                 winMessages.getChildren().add(new Text(data.toString()));
-    //             });
-    //         });
-    //         clientConnection.start();
-
-    //         setupGameScene();
-    //     } else {
-    //         showAlert("Please enter a valid port number.");
-    //     }
-    // }
 
     //create letter squares for the word, for the number of letters of the word
     public void createLetterSquares() {
@@ -145,5 +101,80 @@ public class Game extends Application {
             }
         }
     }
+
+    public Scene createRulesScene(){
+        BorderPane rulesPane = new BorderPane();
+        //place finalrule.png in the middle of the screen
+        Image myImage = new Image("finalrule.png");
+
+        rulesPane.setCenter(new ImageView(myImage));
+
+        Scene rulesScene = new Scene(rulesPane, 900, 600);
+
+        return rulesScene;
+    }
+
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+            this.primaryStage = primaryStage;
+            this.primaryStage.setTitle("Word Guesser Game");
+
+            //write title text on top of the image
+            Text title = new Text("WORD GUESSER");
+            //size of title should be big and located in the center
+            title.setStyle("-fx-font-size: 50px");
+            title.setTextAlignment(TextAlignment.CENTER);
+            title.setFill(Color.WHITE);
+
+            // create a pane to display word guesser 1 .png in the center
+            startPane = new BorderPane();
+            Image myImage = new Image("word guesser 1.png");
+            //place image in the center
+            startPane.setCenter(new ImageView(myImage));
+            //color startPane background with FFEBE0B
+            startPane.setStyle("-fx-background-color: #FFBE0B");
+
+            //button to connect to server and textfield
+            startClient = new Button("Connect to Server");
+            portNumber = new TextField();
+
+            //group the button and textfield together
+            letterBox = new HBox(10, portNumber, startClient);
+            //place the button and textfield in the center
+            letterBox.setAlignment(Pos.CENTER);
+
+            startPane.setTop(title);
+            startPane.setBottom(letterBox);
+
+            Scene startScene = new Scene(startPane, 900, 600);
+            primaryStage.setScene(startScene);
+            primaryStage.show();
+
+
+            sceneMap = new HashMap<String, Scene>();
+            sceneMap.put("start", startScene);
+            sceneMap.put("rules", createRulesScene());
+            // sceneMap.put("game", createGameScene());
+
+            startClient.setOnAction(e -> {
+                //if port number is not empty, connect to server
+                if(!portNumber.getText().isEmpty()) {                       
+                    clientConnection = new Client(data -> {
+                        Platform.runLater(() -> {
+                            //send wordguesserinfo object to server
+                            clientConnection.send(serializable);
+                        });
+                    });
+
+                    clientConnection.start();
+
+                    primaryStage.setScene(sceneMap.get("rules"));
+                    primaryStage.show();
+                }
+            });
+    }
+
+
 
 }

@@ -17,7 +17,7 @@ public class Client extends Thread {
     private Consumer<wordGuesserInfo> wordguessInfo;
 
     Client(Consumer<wordGuesserInfo> wordguessInfo) {
-        
+        this.wordguessInfo = wordguessInfo; 
     }
 
     public void run() {

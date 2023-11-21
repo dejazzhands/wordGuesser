@@ -22,7 +22,6 @@ public class GuiServer extends Application {
 	
 	TextField portNumber;
 	Button serverChoice, clientChoice, b1;
-	HashMap<String, Scene> sceneMap;
 	HBox buttonBox;
 	Scene startScene;
 	BorderPane startPane;
@@ -50,15 +49,24 @@ public class GuiServer extends Application {
 		this.serverChoice.setStyle("-fx-pref-height: 300px");
 		
 		this.serverChoice.setOnAction(e -> { 
-			primaryStage.setScene(sceneMap.get("server"));
-			primaryStage.setTitle("This is the Server");
-			serverConnection = new Server(data -> {
-				Platform.runLater(()->{
-					listItems.getItems().add(data.toString());
-				});
-
-			}, Integer.parseInt(portNumber.getText())); // Pass the port number here
-											
+			try{
+				int port = Integer.parseInt(portNumber.getText());
+				System.out.println(port);
+				serverConnection = new Server(data -> {
+					Platform.runLater(()->{
+						listItems.getItems().add(data.toString());
+					});
+	
+				}, port);
+				primaryStage.setScene(createServerGui());
+				primaryStage.setTitle("This is the Server");
+			} catch (Exception ex) {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setTitle("Error");
+				alert.setHeaderText("Invalid Port Number");
+				alert.setContentText("Please enter a valid port number");
+				alert.showAndWait();
+			}								
 		});
 		
 		serverBox = new VBox();
@@ -75,10 +83,6 @@ public class GuiServer extends Application {
 		listItems = new ListView<String>();
 		listItems2 = new ListView<String>();
 		
-		
-		sceneMap = new HashMap<String, Scene>();
-		
-		sceneMap.put("server",  createServerGui());
 		
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
