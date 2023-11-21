@@ -23,7 +23,7 @@ public class Category {
     }
 
 
-    public void threeCategories() {
+    public void fruits() {
 
         Word apple = new Word("apple");
         Word banana = new Word("banana");
@@ -35,6 +35,9 @@ public class Category {
         fruitsList.add(orange);
 
         Category categoryOne = new Category("fruits", fruitsList);
+    }
+
+    public void animals() {
 
         Word dog = new Word("dog");
         Word cat = new Word("cat");
@@ -46,6 +49,9 @@ public class Category {
         animalsList.add(bird);
 
         Category categoryTwo = new Category("animals", animalsList);
+    }
+
+    public void colors() {
 
         Word red = new Word("red");
         Word blue = new Word("blue");

@@ -118,10 +118,6 @@ public class wordGuesserGameLogic {
         this.wordToGuess = wordToGuess;
     }
 
-    public void setCategories(ArrayList<Category> categories) {
-        this.categories = categories;
-    }
-
     public ArrayList<Category> getCategories() {
         return categories;
     }

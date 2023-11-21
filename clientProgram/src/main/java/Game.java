@@ -102,6 +102,41 @@ public class Game extends Application {
         }
     }
 
+
+
+    public Scene createGameScene(){
+        BorderPane gamePane = new BorderPane();
+        gamePane.setStyle("-fx-background-color: #FB5607");
+
+        //initialize category choice buttons with different background images
+        Button category1 = new Button("Fruits");
+        //set background image for category 1 button as category1background.png
+        category1.setBackground(new Background(new BackgroundImage(new Image("category1background.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+        category1.setPrefSize(300, 300);
+
+        Button category2 = new Button("Animals");
+        //set background image for category 2 button as category2background.png
+        category2.setBackground(new Background(new BackgroundImage(new Image("category2background.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+
+        Button category3 = new Button("Colors");
+        //set background image for category 3 button as category3background.png
+        category3.setBackground(new Background(new BackgroundImage(new Image("category3background.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+
+        //setonaction for category buttons
+        category1.setOnAction(e -> {
+            //set category to fruits
+            serializable.setCurrentCategory("Fruits");
+            //send wordguesserinfo object to server
+            clientConnection.send(serializable);
+        });
+
+
+        Scene gameScene = new Scene(gamePane, 900, 600);
+
+        return gameScene;
+    }
+
+
     public Scene createRulesScene(){
         BorderPane rulesPane = new BorderPane();
         //place finalrule.png in the middle of the screen
@@ -109,11 +144,18 @@ public class Game extends Application {
 
         rulesPane.setCenter(new ImageView(myImage));
 
-        Scene rulesScene = new Scene(rulesPane, 900, 600);
+        Scene rulesScene = new Scene(rulesPane, 1000, 800);
+
+        Button startGame = new Button("Start Game");
+
+        HBox startBox = new HBox(startGame);
+
+        startGame.setOnAction(e -> primaryStage.setScene(sceneMap.get("game")));
+
+        rulesPane.setBottom(startBox);
 
         return rulesScene;
     }
-
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -155,7 +197,7 @@ public class Game extends Application {
             sceneMap = new HashMap<String, Scene>();
             sceneMap.put("start", startScene);
             sceneMap.put("rules", createRulesScene());
-            // sceneMap.put("game", createGameScene());
+            sceneMap.put("game", createGameScene());
 
             startClient.setOnAction(e -> {
                 //if port number is not empty, connect to server
