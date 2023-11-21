@@ -9,7 +9,7 @@ public class Category {
         this.words = words;
     }
 
-    public String getName() {
+    public static String getName() {
         return name;
     }
 

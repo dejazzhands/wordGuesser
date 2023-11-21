@@ -47,38 +47,7 @@ public class Game extends Application {
         launch(args);
     }
 
-    public void fruits() {
 
-
-    }
-
-    public void animals() {
-
-        Word dog = new Word("dog");
-        Word cat = new Word("cat");
-        Word bird = new Word("bird");
-
-        ArrayList<Word> animalsList = new ArrayList<Word>();
-        animalsList.add(dog);
-        animalsList.add(cat);
-        animalsList.add(bird);
-
-        Category categoryTwo = new Category("animals", animalsList);
-    }
-
-    public void colors() {
-
-        Word red = new Word("red");
-        Word blue = new Word("blue");
-        Word green = new Word("green");
-
-        ArrayList<Word> colorsList = new ArrayList<Word>();
-        colorsList.add(red);
-        colorsList.add(blue);
-        colorsList.add(green);
-
-        Category categoryThree = new Category("colors", colorsList);
-    }
 
 
     //create letter squares for the word, for the number of letters of the word
@@ -161,25 +130,7 @@ public class Game extends Application {
         //setonaction for category buttons
         category1.setOnAction(e -> {
 
-            Word apple = new Word("apple");
-            Word banana = new Word("banana");
-            Word orange = new Word("orange");
-
-            ArrayList<Word> fruitsList = new ArrayList<Word>();
-            fruitsList.add(apple);
-            fruitsList.add(banana);
-            fruitsList.add(orange);
-
-            Category categoryOne = new Category("fruits", fruitsList);
-
-            //set category to fruits
-            serializable.setCurrentCategory("Fruits");
-            //pick a random word from the fruits category
-            
-
-            //send wordguesserinfo object to server
             clientConnection.send(serializable);
-
             primaryStage.setScene(sceneMap.get("game"));
         });
 
@@ -223,11 +174,13 @@ public class Game extends Application {
 
         Scene rulesScene = new Scene(rulesPane, 1000, 800);
 
+
+        //USE STACKPANE ON THIS TO OVERLAP
         Button startGame = new Button("Start Game");
 
         HBox startBox = new HBox(startGame);
 
-        startGame.setOnAction(e -> primaryStage.setScene(sceneMap.get("game")));
+        startGame.setOnAction(e -> primaryStage.setScene(sceneMap.get("category")));
 
         rulesPane.setBottom(startBox);
 

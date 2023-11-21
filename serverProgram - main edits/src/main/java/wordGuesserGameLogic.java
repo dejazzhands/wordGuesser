@@ -92,4 +92,9 @@ public class wordGuesserGameLogic {
     public int getCategoryAttempts() {
         return categoryAttempts;
     }
+
+
+
+
+
 }
