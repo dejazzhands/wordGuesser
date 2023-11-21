@@ -1,4 +1,3 @@
-
 import java.util.HashMap;
 
 import javafx.application.Application;
@@ -16,24 +15,25 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import java.util.ArrayList;
+import javafx.scene.control.Alert;
 
-public class GuiServer extends Application{
-
+public class GuiServer extends Application {
 	
-	TextField s1,s2,s3,s4, c1;
-	Button serverChoice,clientChoice,b1;
-	HashMap<String, Scene> sceneMap;
-	GridPane grid;
+	TextField portNumber;
+	Button serverChoice, clientChoice, b1;
 	HBox buttonBox;
-	VBox clientBox;
 	Scene startScene;
 	BorderPane startPane;
 	Server serverConnection;
 	Client clientConnection;
+	VBox serverBox;
+
 	
 	ListView<String> listItems, listItems2;
 	
-	
+	wordGuesserInfo info = new wordGuesserInfo();
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		launch(args);
@@ -48,66 +48,41 @@ public class GuiServer extends Application{
 		this.serverChoice.setStyle("-fx-pref-width: 300px");
 		this.serverChoice.setStyle("-fx-pref-height: 300px");
 		
-		this.serverChoice.setOnAction(e->{ primaryStage.setScene(sceneMap.get("server"));
-											primaryStage.setTitle("This is the Server");
+		this.serverChoice.setOnAction(e -> { 
+			try{
+				int port = Integer.parseInt(portNumber.getText());
+				System.out.println(port);
 				serverConnection = new Server(data -> {
 					Platform.runLater(()->{
 						listItems.getItems().add(data.toString());
 					});
+	
+				}, port);
+				primaryStage.setScene(createServerGui());
+				primaryStage.setTitle("This is the Server");
+			} catch (Exception ex) {
+				Alert alert = new Alert(Alert.AlertType.ERROR);
+				alert.setTitle("Error");
+				alert.setHeaderText("Invalid Port Number");
+				alert.setContentText("Please enter a valid port number");
+				alert.showAndWait();
+			}								
+		});
+		
+		serverBox = new VBox();
+		portNumber = new TextField(); // Add this line to create a TextField for the port number
+		portNumber.setPromptText("Enter port number"); // Add this line to set the prompt text for the TextField
 
-				});
-											
-		});
-		
-		
-		this.clientChoice = new Button("Client");
-		this.clientChoice.setStyle("-fx-pref-width: 300px");
-		this.clientChoice.setStyle("-fx-pref-height: 300px");
-		
-		this.clientChoice.setOnAction(e-> {primaryStage.setScene(sceneMap.get("client"));
-											primaryStage.setTitle("This is a client");
-											clientConnection = new Client(data->{
-							Platform.runLater(()->{listItems2.getItems().add(data.toString());
-											});
-							});
-							
-											clientConnection.start();
-		});
-		
-		this.buttonBox = new HBox(400, serverChoice, clientChoice);
+		this.buttonBox = new HBox(400, serverChoice, portNumber); // Add the TextField to the HBox
 		startPane = new BorderPane();
 		startPane.setPadding(new Insets(70));
 		startPane.setCenter(buttonBox);
-		
+
 		startScene = new Scene(startPane, 800,800);
 		
 		listItems = new ListView<String>();
 		listItems2 = new ListView<String>();
 		
-		c1 = new TextField();
-		b1 = new Button("Send");
-
-		b1.setOnAction(e -> {
-			// Create a wordGuesserInfo object with the necessary information
-			wordGuesserInfo info = new wordGuesserInfo();
-			// Set the fields of the wordGuesserInfo object based on your requirements
-			info.setNumLetters(0);
-			info.setCorrectLetterGuess(false);
-			info.setRemainingGuesses(6);
-			info.setCurrentCategory("");
-			info.setGuessedWords(new ArrayList<String>());
-			info.setWin(false);
-			info.setGameOver(false);
-			// Send the wordGuesserInfo object
-			clientConnection.send(info);
-			c1.clear();
-		});
-		
-		
-		sceneMap = new HashMap<String, Scene>();
-		
-		sceneMap.put("server",  createServerGui());
-		sceneMap.put("client",  createClientGui());
 		
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
@@ -116,7 +91,6 @@ public class GuiServer extends Application{
                 System.exit(0);
             }
         });
-		
 		 
 		
 		primaryStage.setScene(startScene);
@@ -124,6 +98,7 @@ public class GuiServer extends Application{
 		
 	}
 	
+
 	public Scene createServerGui() {
 		
 		BorderPane pane = new BorderPane();
@@ -134,15 +109,7 @@ public class GuiServer extends Application{
 	
 		return new Scene(pane, 500, 400);
 		
-		
 	}
 	
-	public Scene createClientGui() {
-		
-		clientBox = new VBox(10, c1,b1,listItems2);
-		clientBox.setStyle("-fx-background-color: blue");
-		return new Scene(clientBox, 400, 300);
-		
-	}
 
 }

@@ -2,6 +2,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class wordGuesserInfo implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     // Number of letters for the current word being guessed
     private int numLetters;
     
@@ -80,4 +82,15 @@ public class wordGuesserInfo implements Serializable {
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
     }
+
+    public wordGuesserInfo() {
+        this.numLetters = 0;
+        this.correctLetterGuess = false;
+        this.remainingGuesses = 0;
+        this.currentCategory = "";
+        this.guessedWords = new ArrayList<>();
+        this.win = false;
+        this.gameOver = false;
+    }
+    
 }
