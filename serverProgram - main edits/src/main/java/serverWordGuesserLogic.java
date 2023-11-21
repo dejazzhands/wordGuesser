@@ -4,22 +4,35 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 
-public class wordGuesserGameLogic {
-    private String name;
-    private ArrayList<Category> categories;
+//wordGuesserGameLogic has word and category
+
+public class serverWordGuesserLogic {
     private Word wordToGuess;
     private ArrayList<Character> guessedLetters;
     private int remainingGuessesPerWord;
     private int correctGuesses;
     private int categoryAttempts;
+    private ArrayList<Category> categories;
+    private Character letterGuessbyClient;
 
-    public wordGuesserGameLogic(String name, ArrayList<Category> categories) {
-        this.name = name;
-        this.categories = categories;
+    public serverWordGuesserLogic() {
         this.guessedLetters = new ArrayList<>();
         this.remainingGuessesPerWord = 3;
         this.correctGuesses = 0;
         this.categoryAttempts = 0;
+        this.categories = new ArrayList<>();
+    }
+
+    // Method to set the category after the object is created
+    public void setCategory(ArrayList<Category> categories) {
+        this.categories = categories;
+    }
+
+    // Method to initialize the game with a specific word and category
+    public void initializeGame(Word wordToGuess, ArrayList<Category> categories) {
+        this.wordToGuess = wordToGuess;
+        this.categories = categories;
+        // Additional initialization logic if needed
     }
 
     public void guessLetter(char letter) {
@@ -35,7 +48,7 @@ public class wordGuesserGameLogic {
         }
     }
 
-    public void handleCategorySelection() {
+    public void handleNewCategorySelection() {
         if (correctGuesses == 0 && remainingGuessesPerWord > 0) {
             // Client guessed the word within 6 letter guesses
             // They cannot guess another word in the same category but must choose from the two remaining
@@ -54,6 +67,25 @@ public class wordGuesserGameLogic {
         return remainingGuessesPerWord;
     }
 
+    // Method to get the current state of the guessed word (showing guessed letters, hiding others)
+    public String getCurrentWordState() {
+        StringBuilder currentState = new StringBuilder();
+        for (char letter : wordToGuess.getWord().toCharArray()) {
+            if (guessedLetters.contains(letter)) {
+                currentState.append(letter);
+            } else {
+                currentState.append("_"); // Use any character to represent a hidden letter
+            }
+        }
+        return currentState.toString();
+    }
+
+    // Method to check if a letter has already been guessed
+    public boolean isLetterGuessed(char letter) {
+        return guessedLetters.contains(letter);
+    }
+
+
     public boolean isGameWon() {
         return correctGuesses == 3;
     }
@@ -66,7 +98,7 @@ public class wordGuesserGameLogic {
         return false;
     }
 
-    private void resetForNextCategory() {
+    public void resetForNextCategory() {
         guessedLetters.clear();
         remainingGuessesPerWord = 6;
         correctGuesses = 0;
@@ -77,14 +109,6 @@ public class wordGuesserGameLogic {
         this.wordToGuess = wordToGuess;
     }
 
-    public void setCategories(ArrayList<Category> categories) {
-        this.categories = categories;
-    }
-
-    public String getCategoryName() {
-        return name;
-    }
-
     public ArrayList<Category> getCategories() {
         return categories;
     }
@@ -92,9 +116,4 @@ public class wordGuesserGameLogic {
     public int getCategoryAttempts() {
         return categoryAttempts;
     }
-
-
-
-
-
 }

@@ -72,5 +72,9 @@ public class Word implements Serializable{
         //reset categoryAttempts
         
     }
+
+    public String getWord() {
+        return value;
+    }
 }
 

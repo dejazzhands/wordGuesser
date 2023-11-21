@@ -24,6 +24,8 @@ public class wordGuesserInfo implements Serializable {
     
     // Indicates whether the game is over
     private boolean gameOver;
+
+    private Character letterGuessbyClient; 
     
     // Getter and setter methods for all the fields
     
@@ -45,6 +47,10 @@ public class wordGuesserInfo implements Serializable {
 
     public int getRemainingGuesses() {
         return remainingGuesses;
+    }
+
+    public Character getLetterGuessbyClient() {
+        return letterGuessbyClient;
     }
 
     public void setRemainingGuesses(int remainingGuesses) {
@@ -89,6 +95,7 @@ public class wordGuesserInfo implements Serializable {
         this.remainingGuesses = 0;
         this.currentCategory = "";
         this.guessedWords = new ArrayList<>();
+        this.letterGuessbyClient = null;
         this.win = false;
         this.gameOver = false;
     }

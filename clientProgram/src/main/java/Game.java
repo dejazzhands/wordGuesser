@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -47,19 +48,6 @@ public class Game extends Application {
         launch(args);
     }
 
-
-
-
-    //create letter squares for the word, for the number of letters of the word
-    public void createLetterSquares() {
-        // TODO Auto-generated method stub
-        for(int i = 0; i < targetWord.getWord().length(); i++) {
-            char letter = targetWord.getWord().charAt(i);
-            Square square = new Square(letter);
-            letterSquares.put(letter, square);
-            gameLayout.getChildren().add(square);
-        }
-    }
 
 
     public void startNewGame(){
@@ -107,7 +95,7 @@ public class Game extends Application {
 
 
 
-    public Scene createCategoryScene(){
+    public Scene createCategoryScene(wordGuesserInfo serializable){
         BorderPane categoryPane = new BorderPane();
         categoryPane.setStyle("-fx-background-color: #FB5607");
 
@@ -129,7 +117,7 @@ public class Game extends Application {
 
         //setonaction for category buttons
         category1.setOnAction(e -> {
-
+            serializable.setCurrentCategory("Fruits");
             clientConnection.send(serializable);
             primaryStage.setScene(sceneMap.get("game"));
         });
@@ -147,6 +135,7 @@ public class Game extends Application {
             serializable.setCurrentCategory("Colors");
             //send wordguesserinfo object to server
             clientConnection.send(serializable);
+            //pass serializable object to createGameScene
             primaryStage.setScene(sceneMap.get("game"));
         });
 
@@ -172,20 +161,64 @@ public class Game extends Application {
 
         rulesPane.setCenter(new ImageView(myImage));
 
-        Scene rulesScene = new Scene(rulesPane, 1000, 800);
-
-
-        //USE STACKPANE ON THIS TO OVERLAP
+        Scene rulesScene = new Scene(rulesPane, 900, 600);
+        
         Button startGame = new Button("Start Game");
-
         HBox startBox = new HBox(startGame);
+        startBox.setAlignment(Pos.BOTTOM_RIGHT);
 
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(new ImageView(myImage), startBox);
+        rulesPane.setCenter(stackPane);
+
+        StackPane.setMargin(startBox, new Insets(0, 100, 100, 0));
         startGame.setOnAction(e -> primaryStage.setScene(sceneMap.get("category")));
+        
 
         rulesPane.setBottom(startBox);
 
         return rulesScene;
     }
+
+
+    public Scene createGameScene(wordGuesserInfo serializable){
+
+        BorderPane gamePane = new BorderPane();
+        gamePane.setStyle("-fx-background-color: #8338EC");
+
+
+        //Display number of guess attempt remaining, category name
+        Text remainingGuesses = new Text("Remaining Guesses: " + serializable.getRemainingGuesses());
+        Text category = new Text("Category: " + serializable.getCurrentCategory());
+        
+        HBox gameStats = new HBox(remainingGuesses, category);
+        HBox squaresBox = new HBox();
+
+        //code for square boxes
+        Integer numLetters = serializable.getNumLetters();
+        //make as many square boxes as the number of letters in the word
+        for(int i = 0; i < numLetters; i++) {
+            Square square = new Square();
+            squaresBox.getChildren().add(square);
+        }
+
+
+        TextField guessLetterField = new TextField();
+        guessLetterField.setPromptText("Guess a single letter");
+        Button submitGuess = new Button("Submit Guess");
+        HBox guessLetterBox = new HBox(guessLetterField, submitGuess);
+
+        //place guessletterfield center bottom with padding and gameStats center top
+        gamePane.setCenter(squaresBox);
+        gamePane.setBottom(guessLetterBox);
+        gamePane.setTop(gameStats);
+
+        Scene gameScene = new Scene(gamePane, 900, 600);
+
+        return gameScene;
+
+    }
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -227,15 +260,17 @@ public class Game extends Application {
             sceneMap = new HashMap<String, Scene>();
             sceneMap.put("start", startScene);
             sceneMap.put("rules", createRulesScene());
-            sceneMap.put("category", createCategoryScene());
+
 
             startClient.setOnAction(e -> {
                 //if port number is not empty, connect to server
                 if(!portNumber.getText().isEmpty()) {                       
                     clientConnection = new Client(data -> {
                         Platform.runLater(() -> {
-                            //send wordguesserinfo object to server
-                            clientConnection.send(serializable);
+                            //receive data from server and initialize wordguesserinfo object
+                            serializable = (wordGuesserInfo) data;
+                            sceneMap.put("category", createCategoryScene(serializable));
+                            sceneMap.put("game", createGameScene(serializable));
                         });
                     });
 
