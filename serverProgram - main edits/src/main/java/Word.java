@@ -12,6 +12,10 @@ public class Word implements Serializable{
 
     public String value;    
 
+    public int getNumLetters() {
+        return value.length();
+    }
+
     public boolean isGuessed(char letter){
         //check if letter is in word
         //if it is, add it to guessedLetters
@@ -67,6 +71,10 @@ public class Word implements Serializable{
         //reset correctGuesses
         //reset categoryAttempts
         
+    }
+
+    public String getWord() {
+        return value;
     }
 }
 

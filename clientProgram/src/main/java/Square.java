@@ -1,14 +1,35 @@
 import javafx.geometry.Insets;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class Square extends StackPane {
+public class Square extends BorderPane {
     private char letter;
     private boolean isRevealed;
     private Text text;
+
+    //empty constructor for Square for initialization and display purposes
+    public Square() {
+        super();
+        this.letter = ' ';
+        this.isRevealed = false;
+        this.text = new Text();
+
+        // Create a Rectangle for the background
+        Rectangle background = new Rectangle(150, 150);
+        //use the wordbackground.png image as the background
+        background.setFill(new javafx.scene.image.Image(getClass().getResourceAsStream("wordbackground.png")).getPixelReader().getColor(0, 0));
+
+        // Set initial style for the Text node
+        text.setFont(Font.font("Arial", 20));
+        text.setFill(Color.BLACK);
+
+        // Add the background and text to the StackPane
+        getChildren().addAll(background, text);
+
+    }
 
     public Square(char letter) {
         super();
@@ -28,12 +49,8 @@ public class Square extends StackPane {
         // Add the background and text to the StackPane
         getChildren().addAll(background, text);
 
-        style();
     }
 
-    public void style() {
-        // Additional styling if needed
-    }
 
     public char getLetter() {
         return letter;

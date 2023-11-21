@@ -13,6 +13,7 @@ public class wordGuesserGameLogic {
     private int correctGuesses;
     private int categoryAttempts;
     private ArrayList<Category> categories;
+    private Character letterGuessbyClient;
 
     public wordGuesserGameLogic() {
         this.guessedLetters = new ArrayList<>();
@@ -116,10 +117,6 @@ public class wordGuesserGameLogic {
 
     public void setWordToGuess(Word wordToGuess) {
         this.wordToGuess = wordToGuess;
-    }
-
-    public void setCategories(ArrayList<Category> categories) {
-        this.categories = categories;
     }
 
     public ArrayList<Category> getCategories() {

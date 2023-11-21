@@ -26,7 +26,6 @@ public class GuiServer extends Application {
 	Scene startScene;
 	BorderPane startPane;
 	Server serverConnection;
-	Client clientConnection;
 	VBox serverBox;
 
 	

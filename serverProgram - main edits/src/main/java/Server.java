@@ -17,6 +17,9 @@ public class Server {
 	TheServer server;
 	private Consumer<Serializable> callback;
 	int port; // Add this line to store the port number
+
+	serverWordGuesserLogic logic = new serverWordGuesserLogic();
+	CommunicationHandler handler = new CommunicationHandler(logic);
 	
 	Server(Consumer<Serializable> call, int port){ // Modify this line to accept the port number
 	
@@ -74,6 +77,7 @@ public class Server {
 			}
 
 			public void startGame() {
+
 				for(int i = 0; i < clients.size(); i++) {
 					try {
 						wordGuesserInfo info = new wordGuesserInfo();
@@ -85,6 +89,7 @@ public class Server {
 						info.setGameOver(false);
 						info.setWin(false);
 						ClientThread t = clients.get(i);
+						//sending information
 						t.out.writeObject(info);
 					}
 					catch(Exception e) {
@@ -92,6 +97,7 @@ public class Server {
 					}
 				}
 			}
+
 			
 			public void run(){
 					
@@ -121,5 +127,6 @@ public class Server {
 					}
 				}
 			}//end of run
-		}//end of client thread
+		}
+		//end of client thread
 }
