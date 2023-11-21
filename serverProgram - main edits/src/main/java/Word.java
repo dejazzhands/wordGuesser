@@ -4,13 +4,13 @@ import java.util.List;
 
 
 public class Word implements Serializable{
+    public String value;    
+
     Word(String value) {
         //TODO Auto-generated constructor stub
         this.value = value;
     }
 
-
-    public String value;    
 
     public int getNumLetters() {
         return value.length();

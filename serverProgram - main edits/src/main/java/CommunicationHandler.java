@@ -9,7 +9,7 @@ import java.util.List;
 public class CommunicationHandler {
 
 	public void communicationHandler(){
-		//constructor
+		
 		
 	}
 
