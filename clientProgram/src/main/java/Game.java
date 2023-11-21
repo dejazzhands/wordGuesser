@@ -17,6 +17,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.beans.EventHandler;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -44,6 +45,39 @@ public class Game extends Application {
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         launch(args);
+    }
+
+    public void fruits() {
+
+
+    }
+
+    public void animals() {
+
+        Word dog = new Word("dog");
+        Word cat = new Word("cat");
+        Word bird = new Word("bird");
+
+        ArrayList<Word> animalsList = new ArrayList<Word>();
+        animalsList.add(dog);
+        animalsList.add(cat);
+        animalsList.add(bird);
+
+        Category categoryTwo = new Category("animals", animalsList);
+    }
+
+    public void colors() {
+
+        Word red = new Word("red");
+        Word blue = new Word("blue");
+        Word green = new Word("green");
+
+        ArrayList<Word> colorsList = new ArrayList<Word>();
+        colorsList.add(red);
+        colorsList.add(blue);
+        colorsList.add(green);
+
+        Category categoryThree = new Category("colors", colorsList);
     }
 
 
@@ -104,9 +138,9 @@ public class Game extends Application {
 
 
 
-    public Scene createGameScene(){
-        BorderPane gamePane = new BorderPane();
-        gamePane.setStyle("-fx-background-color: #FB5607");
+    public Scene createCategoryScene(){
+        BorderPane categoryPane = new BorderPane();
+        categoryPane.setStyle("-fx-background-color: #FB5607");
 
         //initialize category choice buttons with different background images
         Button category1 = new Button("Fruits");
@@ -117,23 +151,66 @@ public class Game extends Application {
         Button category2 = new Button("Animals");
         //set background image for category 2 button as category2background.png
         category2.setBackground(new Background(new BackgroundImage(new Image("category2background.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+        category2.setPrefSize(300,300);
 
         Button category3 = new Button("Colors");
         //set background image for category 3 button as category3background.png
         category3.setBackground(new Background(new BackgroundImage(new Image("category3background.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+        category3.setPrefSize(300,300);
 
         //setonaction for category buttons
         category1.setOnAction(e -> {
+
+            Word apple = new Word("apple");
+            Word banana = new Word("banana");
+            Word orange = new Word("orange");
+
+            ArrayList<Word> fruitsList = new ArrayList<Word>();
+            fruitsList.add(apple);
+            fruitsList.add(banana);
+            fruitsList.add(orange);
+
+            Category categoryOne = new Category("fruits", fruitsList);
+
             //set category to fruits
             serializable.setCurrentCategory("Fruits");
+            //pick a random word from the fruits category
+            
+
             //send wordguesserinfo object to server
             clientConnection.send(serializable);
+
+            primaryStage.setScene(sceneMap.get("game"));
         });
 
+        category2.setOnAction(e -> {
+            //set category to animals
+            serializable.setCurrentCategory("Animals");
+            //send wordguesserinfo object to server
+            clientConnection.send(serializable);
+            primaryStage.setScene(sceneMap.get("game"));
+        });
 
-        Scene gameScene = new Scene(gamePane, 900, 600);
+        category3.setOnAction(e -> {
+            //set category to colors
+            serializable.setCurrentCategory("Colors");
+            //send wordguesserinfo object to server
+            clientConnection.send(serializable);
+            primaryStage.setScene(sceneMap.get("game"));
+        });
 
-        return gameScene;
+        
+        HBox categoryBox = new HBox(30, category1, category2, category3);
+
+        VBox container = new VBox(200, categoryBox);
+
+        categoryBox.setAlignment(Pos.CENTER);
+
+        categoryPane.setCenter(categoryBox);
+
+        Scene categoryScene = new Scene(categoryPane, 900, 600);
+
+        return categoryScene;
     }
 
 
@@ -197,7 +274,7 @@ public class Game extends Application {
             sceneMap = new HashMap<String, Scene>();
             sceneMap.put("start", startScene);
             sceneMap.put("rules", createRulesScene());
-            sceneMap.put("game", createGameScene());
+            sceneMap.put("category", createCategoryScene());
 
             startClient.setOnAction(e -> {
                 //if port number is not empty, connect to server
