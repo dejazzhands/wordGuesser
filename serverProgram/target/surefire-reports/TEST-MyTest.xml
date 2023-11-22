@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="MyTest" time="0.057" tests="5" errors="0" skipped="0" failures="1">
+  <properties>
+    <property name="java.specification.version" value="17"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.class.path" value="C:\Users\samef\OneDrive\Desktop\project3 cs 342 new\code\wordGuesser\serverProgram\target\test-classes;C:\Users\samef\OneDrive\Desktop\project3 cs 342 new\code\wordGuesser\serverProgram\target\classes;C:\Users\samef\.m2\repository\org\junit\jupiter\junit-jupiter\5.6.2\junit-jupiter-5.6.2.jar;C:\Users\samef\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.6.2\junit-jupiter-api-5.6.2.jar;C:\Users\samef\.m2\repository\org\apiguardian\apiguardian-api\1.1.0\apiguardian-api-1.1.0.jar;C:\Users\samef\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\samef\.m2\repository\org\junit\platform\junit-platform-commons\1.6.2\junit-platform-commons-1.6.2.jar;C:\Users\samef\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.6.2\junit-jupiter-params-5.6.2.jar;C:\Users\samef\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.6.2\junit-jupiter-engine-5.6.2.jar;C:\Users\samef\.m2\repository\org\junit\platform\junit-platform-engine\1.6.2\junit-platform-engine-1.6.2.jar;C:\Users\samef\.m2\repository\org\openjfx\javafx-controls\12.0.1\javafx-controls-12.0.1.jar;C:\Users\samef\.m2\repository\org\openjfx\javafx-controls\12.0.1\javafx-controls-12.0.1-win.jar;C:\Users\samef\.m2\repository\org\openjfx\javafx-graphics\12.0.1\javafx-graphics-12.0.1.jar;C:\Users\samef\.m2\repository\org\openjfx\javafx-graphics\12.0.1\javafx-graphics-12.0.1-win.jar;C:\Users\samef\.m2\repository\org\openjfx\javafx-base\12.0.1\javafx-base-12.0.1.jar;C:\Users\samef\.m2\repository\org\openjfx\javafx-base\12.0.1\javafx-base-12.0.1-win.jar;C:\Users\samef\.m2\repository\org\openjfx\javafx-fxml\12\javafx-fxml-12.jar;C:\Users\samef\.m2\repository\org\openjfx\javafx-fxml\12\javafx-fxml-12-win.jar;"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="user.variant" value=""/>
+    <property name="java.vendor.url" value="https://java.oracle.com/"/>
+    <property name="user.timezone" value="America/Chicago"/>
+    <property name="os.name" value="Windows 10"/>
+    <property name="java.vm.specification.version" value="17"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-17.0.8\bin"/>
+    <property name="sun.java.command" value="C:\Users\samef\AppData\Local\Temp\surefire16041851871879906392\surefirebooter16750361712308840569.jar C:\Users\samef\AppData\Local\Temp\surefire16041851871879906392 2023-11-21T23-13-32_813-jvmRun1 surefire6127801384244341525tmp surefire_017483832662595414872tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="C:\Users\samef\OneDrive\Desktop\project3 cs 342 new\code\wordGuesser\serverProgram\target\test-classes;C:\Users\samef\OneDrive\Desktop\project3 cs 342 new\code\wordGuesser\serverProgram\target\classes;C:\Users\samef\.m2\repository\org\junit\jupiter\junit-jupiter\5.6.2\junit-jupiter-5.6.2.jar;C:\Users\samef\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.6.2\junit-jupiter-api-5.6.2.jar;C:\Users\samef\.m2\repository\org\apiguardian\apiguardian-api\1.1.0\apiguardian-api-1.1.0.jar;C:\Users\samef\.m2\repository\org\opentest4j\opentest4j\1.2.0\opentest4j-1.2.0.jar;C:\Users\samef\.m2\repository\org\junit\platform\junit-platform-commons\1.6.2\junit-platform-commons-1.6.2.jar;C:\Users\samef\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.6.2\junit-jupiter-params-5.6.2.jar;C:\Users\samef\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.6.2\junit-jupiter-engine-5.6.2.jar;C:\Users\samef\.m2\repository\org\junit\platform\junit-platform-engine\1.6.2\junit-platform-engine-1.6.2.jar;C:\Users\samef\.m2\repository\org\openjfx\javafx-controls\12.0.1\javafx-controls-12.0.1.jar;C:\Users\samef\.m2\repository\org\openjfx\javafx-controls\12.0.1\javafx-controls-12.0.1-win.jar;C:\Users\samef\.m2\repository\org\openjfx\javafx-graphics\12.0.1\javafx-graphics-12.0.1.jar;C:\Users\samef\.m2\repository\org\openjfx\javafx-graphics\12.0.1\javafx-graphics-12.0.1-win.jar;C:\Users\samef\.m2\repository\org\openjfx\javafx-base\12.0.1\javafx-base-12.0.1.jar;C:\Users\samef\.m2\repository\org\openjfx\javafx-base\12.0.1\javafx-base-12.0.1-win.jar;C:\Users\samef\.m2\repository\org\openjfx\javafx-fxml\12\javafx-fxml-12.jar;C:\Users\samef\.m2\repository\org\openjfx\javafx-fxml\12\javafx-fxml-12-win.jar;"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="C:\Users\samef"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2023-07-18"/>
+    <property name="java.home" value="C:\Program Files\Java\jdk-17.0.8"/>
+    <property name="file.separator" value="\"/>
+    <property name="basedir" value="C:\Users\samef\OneDrive\Desktop\project3 cs 342 new\code\wordGuesser\serverProgram"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="surefire.real.class.path" value="C:\Users\samef\AppData\Local\Temp\surefire16041851871879906392\surefirebooter16750361712308840569.jar"/>
+    <property name="user.script" value=""/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="17.0.8+9-LTS-211"/>
+    <property name="user.name" value="samef"/>
+    <property name="path.separator" value=";"/>
+    <property name="os.version" value="10.0"/>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="file.encoding" value="Cp1252"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="localRepository" value="C:\Users\samef\.m2\repository"/>
+    <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
+    <property name="java.io.tmpdir" value="C:\Users\samef\AppData\Local\Temp\"/>
+    <property name="java.version" value="17.0.8"/>
+    <property name="user.dir" value="C:\Users\samef\OneDrive\Desktop\project3 cs 342 new\code\wordGuesser\serverProgram"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="native.encoding" value="Cp1252"/>
+    <property name="java.library.path" value="C:\Program Files\Java\jdk-17.0.8\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files\Eclipse Adoptium\jdk-17.0.6.10-hotspot\bin;C:\Program Files\VanDyke Software\Clients\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\Git\cmd;C:\MinGW\bin;C:\Users\samef\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\apache-maven-3.9.4\bin;C:\Program Files\Java\jdk-17.0.8\bin;C:\Users\samef\.cargo\bin;C:\Users\samef\AppData\Local\Microsoft\WindowsApps;C:\Users\samef\AppData\Roaming\npm;C:\Users\samef\AppData\Local\Programs\Microsoft VS Code\bin;C:\msys64\mingw64\bin;C:\Program Files\JetBrains\CLion 2022.2.4\bin;C:\Users\samef\OneDrive\Desktop\ghidra_10.2.3_PUBLIC_20230208\ghidra_10.2.3_PUBLIC\bin;C:\Users\samef\AppData\Local\Programs\oh-my-posh\bin;C:\Users\samef\.dotnet\tools;."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="java.vm.version" value="17.0.8+9-LTS-211"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="61.0"/>
+  </properties>
+  <testcase name="testGuessLetterCorrect" classname="MyTest" time="0.034"/>
+  <testcase name="testLetterGuessVerification" classname="MyTest" time="0.002"/>
+  <testcase name="testGuessLetterIncorrect" classname="MyTest" time="0.001"/>
+  <testcase name="testHandleNewCategorySelection" classname="MyTest" time="0"/>
+  <testcase name="testCategorySelectionAndWordGeneration" classname="MyTest" time="0.013">
+    <failure message="expected: &lt;4&gt; but was: &lt;0&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: expected: <4> but was: <0>
+	at MyTest.testCategorySelectionAndWordGeneration(MyTest.java:74)
+]]></failure>
+    <system-out><![CDATA[Error in getWordandSendBack
+]]></system-out>
+  </testcase>
+</testsuite>

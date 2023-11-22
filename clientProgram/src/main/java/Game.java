@@ -11,6 +11,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -93,8 +95,6 @@ public class Game extends Application {
         }
     }
 
-
-
     public Scene createCategoryScene(wordGuesserInfo serializable){
         BorderPane categoryPane = new BorderPane();
         categoryPane.setStyle("-fx-background-color: #FB5607");
@@ -104,22 +104,27 @@ public class Game extends Application {
         //set background image for category 1 button as category1background.png
         category1.setBackground(new Background(new BackgroundImage(new Image("category1background.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
         category1.setPrefSize(300, 300);
+        category1.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16;");
 
         Button category2 = new Button("Animals");
         //set background image for category 2 button as category2background.png
         category2.setBackground(new Background(new BackgroundImage(new Image("category2background.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
         category2.setPrefSize(300,300);
+        category2.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16;");
 
         Button category3 = new Button("Colors");
         //set background image for category 3 button as category3background.png
         category3.setBackground(new Background(new BackgroundImage(new Image("category3background.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
         category3.setPrefSize(300,300);
+        category3.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16;");
 
         //setonaction for category buttons
         category1.setOnAction(e -> {
-            serializable.setCurrentCategory("Fruits");
+            // serializable.setCurrentCategory("Fruits");
+            //send wordguesserinfo object to server
             clientConnection.send(serializable);
-            primaryStage.setScene(sceneMap.get("game"));
+            sceneMap.put("game", createGameScene(serializable));
+            primaryStage.setScene(sceneMap.get( "game"));
         });
 
         category2.setOnAction(e -> {
@@ -127,6 +132,8 @@ public class Game extends Application {
             serializable.setCurrentCategory("Animals");
             //send wordguesserinfo object to server
             clientConnection.send(serializable);
+
+            sceneMap.put("game", createGameScene(serializable));
             primaryStage.setScene(sceneMap.get("game"));
         });
 
@@ -135,10 +142,13 @@ public class Game extends Application {
             serializable.setCurrentCategory("Colors");
             //send wordguesserinfo object to server
             clientConnection.send(serializable);
-            //pass serializable object to createGameScene
+
+            sceneMap.put("game", createGameScene(serializable));
             primaryStage.setScene(sceneMap.get("game"));
         });
 
+        
+        //update information on wordguesserinfo object
         
         HBox categoryBox = new HBox(30, category1, category2, category3);
 
@@ -165,17 +175,13 @@ public class Game extends Application {
         
         Button startGame = new Button("Start Game");
         HBox startBox = new HBox(startGame);
-        startBox.setAlignment(Pos.BOTTOM_RIGHT);
+        startBox.setAlignment(Pos.CENTER);
 
         StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(new ImageView(myImage), startBox);
         rulesPane.setCenter(stackPane);
-
-        StackPane.setMargin(startBox, new Insets(0, 100, 100, 0));
-        startGame.setOnAction(e -> primaryStage.setScene(sceneMap.get("category")));
         
-
-        rulesPane.setBottom(startBox);
+        startGame.setOnAction(e -> primaryStage.setScene(sceneMap.get("category")));
 
         return rulesScene;
     }
@@ -186,29 +192,41 @@ public class Game extends Application {
         BorderPane gamePane = new BorderPane();
         gamePane.setStyle("-fx-background-color: #8338EC");
 
+        //get number of letters from the server using getwordandsendback logic
+    
+
 
         //Display number of guess attempt remaining, category name
-        Text remainingGuesses = new Text("Remaining Guesses: " + serializable.getRemainingGuesses());
-        Text category = new Text("Category: " + serializable.getCurrentCategory());
+        Text remainingGuesses = new Text("Remaining Guesses: " + serializable.getRemainingGuesses() + "   ");
+        Text category = new Text(" Category: " + serializable.getCurrentCategory() + "    ");
+        Text numofLetters = new Text("Number of Letters: " + serializable.getNumLetters());
+
+        remainingGuesses.setFill(Color.WHITE);
+        remainingGuesses.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        category.setFill(Color.WHITE);
+        category.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        numofLetters.setFill(Color.WHITE);
+        numofLetters.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         
-        HBox gameStats = new HBox(remainingGuesses, category);
+        HBox gameStats = new HBox(remainingGuesses, category, numofLetters);
         HBox squaresBox = new HBox();
 
         //code for square boxes
         Integer numLetters = serializable.getNumLetters();
         //make as many square boxes as the number of letters in the word
         for(int i = 0; i < numLetters; i++) {
-            Square square = new Square();
+            Rectangle square = new Rectangle(150, 150);
+            //fill with white color
+            square.setFill(Color.WHITE);
+            //add each square to the squaresBox
             squaresBox.getChildren().add(square);
         }
-
-
+        
         TextField guessLetterField = new TextField();
         guessLetterField.setPromptText("Guess a single letter");
         Button submitGuess = new Button("Submit Guess");
         HBox guessLetterBox = new HBox(guessLetterField, submitGuess);
-
-        //place guessletterfield center bottom with padding and gameStats center top
+        
         gamePane.setCenter(squaresBox);
         gamePane.setBottom(guessLetterBox);
         gamePane.setTop(gameStats);
@@ -219,6 +237,103 @@ public class Game extends Application {
 
     }
 
+    //IF GUESSED CORRECTLY//
+    public Scene createCorrectGuessScene(wordGuesserInfo serializable)
+    {
+        BorderPane correctPane = new BorderPane();
+        correctPane.setStyle("-fx-background-color: #8338EC");
+        //FIX THIS LATER//
+        Image myImage = new Image("finalrule.png");
+
+        Scene correctScene = new Scene(correctPane, 900, 600);
+        correctPane.setCenter(new ImageView(myImage));
+
+        Button returnButton = new Button("Keep Playing");
+        HBox returnBox = new HBox(returnButton);
+        returnBox.setAlignment(Pos.CENTER);
+
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(new ImageView(myImage), returnBox);
+        correctPane.setCenter(stackPane);
+        
+        returnButton.setOnAction(e -> primaryStage.setScene(sceneMap.get("game")));
+
+        return correctScene;
+    }
+
+    //IF GUESSED INCORRECTLY//
+    public Scene createIncorrectGuessScene(wordGuesserInfo serializable)
+    {
+        BorderPane incorrectPane = new BorderPane();
+        incorrectPane.setStyle("-fx-background-color: #8338EC");
+        //FIX THIS LATER//
+        Image myImage = new Image("finalrule.png");
+
+        Scene incorrectScene = new Scene(incorrectPane, 900, 600);
+        incorrectPane.setCenter(new ImageView(myImage));
+
+        Button returnButton = new Button("Try Again");
+        HBox returnBox = new HBox(returnButton);
+        returnBox.setAlignment(Pos.CENTER);
+
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(new ImageView(myImage), returnBox);
+        incorrectPane.setCenter(stackPane);
+        
+        returnButton.setOnAction(e -> primaryStage.setScene(sceneMap.get("game")));
+
+        return incorrectScene;
+    }
+
+    //IF GAME OVER//
+    public Scene createGameOver(wordGuesserInfo serializable)
+    {
+        BorderPane gameOverPane = new BorderPane();
+        gameOverPane.setStyle("-fx-background-color: #8338EC");
+        //FIX THIS LATER//
+        Image myImage = new Image("finalrule.png");
+
+        Scene gameOverScene = new Scene(gameOverPane, 900, 600);
+        gameOverPane.setCenter(new ImageView(myImage));
+
+        Button returnButton = new Button("New Game?");
+        HBox returnBox = new HBox(returnButton);
+        returnBox.setAlignment(Pos.CENTER);
+
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(new ImageView(myImage), returnBox);
+        gameOverPane.setCenter(stackPane);
+        
+        returnButton.setOnAction(e -> primaryStage.setScene(sceneMap.get("start")));
+
+        return gameOverScene;
+    }
+
+    //IF GAME WON//
+    public Scene createGameWon(wordGuesserInfo serializable)
+    {
+        BorderPane winPane = new BorderPane();
+        winPane.setStyle("-fx-background-color: #8338EC");
+        //FIX THIS LATER//
+        Image myImage = new Image("finalrule.png");
+
+        Scene gameWon = new Scene(winPane, 900, 600);
+        winPane.setCenter(new ImageView(myImage));
+
+        Button returnButton = new Button("New Game?");
+        Button returnButton2 = new Button("Quit Game");
+        HBox returnBox = new HBox(returnButton, returnButton2);
+        returnBox.setAlignment(Pos.CENTER);
+
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(new ImageView(myImage), returnBox);
+        winPane.setCenter(stackPane);
+        
+        returnButton.setOnAction(e -> primaryStage.setScene(sceneMap.get("start")));
+        returnButton2.setOnAction(e -> Platform.exit());
+
+        return gameWon;
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -270,7 +385,6 @@ public class Game extends Application {
                             //receive data from server and initialize wordguesserinfo object
                             serializable = (wordGuesserInfo) data;
                             sceneMap.put("category", createCategoryScene(serializable));
-                            sceneMap.put("game", createGameScene(serializable));
                         });
                     });
 

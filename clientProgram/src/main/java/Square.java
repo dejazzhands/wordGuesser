@@ -20,7 +20,6 @@ public class Square extends BorderPane {
         // Create a Rectangle for the background
         Rectangle background = new Rectangle(150, 150);
         //use the wordbackground.png image as the background
-        background.setFill(new javafx.scene.image.Image(getClass().getResourceAsStream("wordbackground.png")).getPixelReader().getColor(0, 0));
 
         // Set initial style for the Text node
         text.setFont(Font.font("Arial", 20));

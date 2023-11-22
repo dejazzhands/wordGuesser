@@ -46,9 +46,10 @@ public class Client extends Thread {
 	public void send(wordGuesserInfo data) {
 		try {
 			out.writeObject(data);
+            out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
+    
 }

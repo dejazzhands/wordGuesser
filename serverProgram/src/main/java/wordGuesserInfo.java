@@ -113,7 +113,6 @@ public class wordGuesserInfo implements Serializable {
         this.win = info.win;
         this.gameOver = info.gameOver;
     }
-
     
     
 }
