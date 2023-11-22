@@ -25,5 +25,4 @@ public class Category {
     public void addWord(Word word) {
         words.add(word);
     }
-
 }

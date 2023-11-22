@@ -49,18 +49,18 @@ public class wordGuesserGameLogic {
     }
 
     public void handleCategorySelection() {
-        if (correctGuesses == 0 && remainingGuessesPerWord > 0) {
-            // Client guessed the word within 6 letter guesses
-            // They cannot guess another word in the same category but must choose from the two remaining
-            resetForNextCategory();
-        } else {
-            // Client did not guess the word correctly or used all guesses
-            // They are free to choose from any of the three categories for another word
-            categoryAttempts++;
-            if (categoryAttempts < 3) {
-                resetForNextCategory();
-            }
-        }
+        // if (correctGuesses == 0 && remainingGuessesPerWord > 0) {
+        //     // Client guessed the word within 6 letter guesses
+        //     // They cannot guess another word in the same category but must choose from the two remaining
+        //     resetForNextCategory();
+        // } else {
+        //     // Client did not guess the word correctly or used all guesses
+        //     // They are free to choose from any of the three categories for another word
+        //     categoryAttempts++;
+        //     if (categoryAttempts < 3) {
+        //         resetForNextCategory();
+        //     }
+        // }
     }
 
     public int getRemainingGuessesPerWord() {

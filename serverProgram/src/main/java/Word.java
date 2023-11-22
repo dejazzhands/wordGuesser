@@ -4,12 +4,17 @@ import java.util.List;
 
 
 public class Word implements Serializable{
+    public String value;    
+
     Word(String value) {
         //TODO Auto-generated constructor stub
         this.value = value;
     }
 
-    public String value;    
+
+    public int length() {
+        return value.length();
+    }
 
     public boolean isGuessed(char letter){
         //check if letter is in word
@@ -44,11 +49,6 @@ public class Word implements Serializable{
         return indices;
     }
 
-    public String getWord(){
-        //return word
-        return value;
-    }
-
     public boolean isComplete(){
         //check if all letters in word have been guessed
         //if they have, return true
@@ -65,6 +65,16 @@ public class Word implements Serializable{
     }
 
     public void resetWord(){
-       value = "";
+        //reset word to initial state, making sure that there is no intersection with the wordguesser class before merging
+        //reset guessedLetters
+        //reset remainingGuesses
+        //reset correctGuesses
+        //reset categoryAttempts
+        
+    }
+
+    public String getWord() {
+        return value;
     }
 }
+

@@ -97,7 +97,7 @@ public class wordGuesserInfo implements Serializable {
         this.numLetters = 0;
         this.correctLetterGuess = false;
         this.remainingGuesses = 6;
-        this.currentCategory = "";
+        this.currentCategory = "blank";
         this.guessedWords = new ArrayList<>();
         this.win = false;
         this.gameOver = false;
