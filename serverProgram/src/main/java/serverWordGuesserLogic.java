@@ -9,17 +9,17 @@ import java.util.ArrayList;
 public class serverWordGuesserLogic {
     private Word wordToGuess;
     private ArrayList<Character> guessedLetters;
-    private int remainingGuessesPerWord;
+    private int remainingGuessesPerWord; // This is to keep track of how many guesses the user has left for a word
     private int correctGuesses;
-    private int categoryAttempts;
+    private int categoryAttempts; // This is to keep track of how many times the user has attempted to guess a word in a category
     private ArrayList<Category> categories;
     private Character letterGuessbyClient;
 
     public serverWordGuesserLogic() {
         this.guessedLetters = new ArrayList<>();
-        this.remainingGuessesPerWord = 3;
+        this.remainingGuessesPerWord = 6;
         this.correctGuesses = 0;
-        this.categoryAttempts = 0;
+        this.categoryAttempts = 0; //cap it to three per category
         this.categories = new ArrayList<>();
     }
 

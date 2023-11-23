@@ -2,33 +2,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class wordGuesserInfo implements Serializable {
-    private static final long serialVersionUID = 1L;
 
-    // Number of letters for the current word being guessed
-    private int numLetters;
-    
-    // Indicates whether the guessed letter is correct
-    private boolean correctLetterGuess;
-    
-    // Number of guesses remaining
-    private int remainingGuesses;
-    
-    // Category of the current word being guessed
-    private String currentCategory;
-    
-    // List of words that have been guessed to avoid repetition
-    private ArrayList<String> guessedWords;
-    
-    // Indicates whether the client has won the game
-    private boolean win;
-    
-    // Indicates whether the game is over
-    private boolean gameOver;
-
-    private Character letterGuessbyClient;
+    Integer numLetters;
+    Boolean correctLetterGuess;
+    Integer remainingGuesses;
+    String currentCategory; // This is the category that the user has chosen
+    ArrayList<String> guessedWords;
+    Boolean win;
+    Boolean gameOver;
+    Boolean categoryChosen; // This is to check if the user has chosen a category
+    Character letterGuessbyClient;
+    String msg;
     
     // Getter and setter methods for all the fields
-    
     public int getNumLetters() {
         return numLetters;
     }
@@ -89,6 +75,14 @@ public class wordGuesserInfo implements Serializable {
         return gameOver;
     }
 
+    public void setCategoryChosen(boolean categoryChosen){
+        this.categoryChosen = categoryChosen;
+    }
+
+    public boolean isCategoryChosen(){
+        return categoryChosen;
+    }
+
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
     }
@@ -97,23 +91,26 @@ public class wordGuesserInfo implements Serializable {
         this.numLetters = 0;
         this.correctLetterGuess = false;
         this.remainingGuesses = 6;
-        this.currentCategory = "";
+        this.currentCategory = "this is server";
         this.guessedWords = new ArrayList<>();
         this.win = false;
         this.gameOver = false;
+        this.categoryChosen = false;
+        this.letterGuessbyClient = ' ';
     }
 
-    //copy constructor for wordGuesserInfo
-    public wordGuesserInfo(wordGuesserInfo info){
-        this.numLetters = info.numLetters;
-        this.correctLetterGuess = info.correctLetterGuess;
-        this.remainingGuesses = info.remainingGuesses;
-        this.currentCategory = info.currentCategory;
-        this.guessedWords = info.guessedWords;
-        this.win = info.win;
-        this.gameOver = info.gameOver;
-    }
 
+    void restartGame() {
+        this.numLetters = 0;
+        this.correctLetterGuess = false;
+        this.remainingGuesses = 6;
+        this.currentCategory = "this is server";
+        this.guessedWords.clear();
+        this.win = false;
+        this.gameOver = false;
+        this.categoryChosen = false;
+        this.letterGuessbyClient = ' ';
+    }
     
     
 }

@@ -7,6 +7,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,6 +23,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.beans.EventHandler;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -95,6 +99,28 @@ public class Game extends Application {
         }
     }
 
+    public Scene createRulesScene(){
+        BorderPane rulesPane = new BorderPane();
+        //place finalrule.png in the middle of the screen
+        Image myImage = new Image("finalrule.png");
+
+        rulesPane.setCenter(new ImageView(myImage));
+
+        Scene rulesScene = new Scene(rulesPane, 900, 600);
+        
+        Button understand = new Button("I understand");
+        HBox startBox = new HBox(understand);
+        startBox.setAlignment(Pos.CENTER);
+
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(new ImageView(myImage), startBox);
+        rulesPane.setCenter(stackPane);
+        
+        
+
+        return rulesScene;
+    }
+
     public Scene createCategoryScene(wordGuesserInfo serializable){
         BorderPane categoryPane = new BorderPane();
         categoryPane.setStyle("-fx-background-color: #FB5607");
@@ -120,31 +146,24 @@ public class Game extends Application {
 
         //setonaction for category buttons
         category1.setOnAction(e -> {
-            // serializable.setCurrentCategory("Fruits");
-            //send wordguesserinfo object to server
+            serializable.setCurrentCategory("Fruits");
+            serializable.setCategoryChosen(true);
             clientConnection.send(serializable);
-            sceneMap.put("game", createGameScene(serializable));
-            primaryStage.setScene(sceneMap.get( "game"));
+            System.out.println("Category 'Fruits' selected and sent to server.");
         });
 
         category2.setOnAction(e -> {
-            //set category to animals
             serializable.setCurrentCategory("Animals");
-            //send wordguesserinfo object to server
+            serializable.setCategoryChosen(true);
             clientConnection.send(serializable);
-
-            sceneMap.put("game", createGameScene(serializable));
-            primaryStage.setScene(sceneMap.get("game"));
+            System.out.println("Category 'Animals' selected and sent to server.");
         });
 
         category3.setOnAction(e -> {
-            //set category to colors
             serializable.setCurrentCategory("Colors");
-            //send wordguesserinfo object to server
+            serializable.setCategoryChosen(true);
             clientConnection.send(serializable);
-
-            sceneMap.put("game", createGameScene(serializable));
-            primaryStage.setScene(sceneMap.get("game"));
+            System.out.println("Category 'Colors' selected and sent to server.");
         });
 
         
@@ -164,28 +183,6 @@ public class Game extends Application {
     }
 
 
-    public Scene createRulesScene(){
-        BorderPane rulesPane = new BorderPane();
-        //place finalrule.png in the middle of the screen
-        Image myImage = new Image("finalrule.png");
-
-        rulesPane.setCenter(new ImageView(myImage));
-
-        Scene rulesScene = new Scene(rulesPane, 900, 600);
-        
-        Button startGame = new Button("Start Game");
-        HBox startBox = new HBox(startGame);
-        startBox.setAlignment(Pos.CENTER);
-
-        StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(new ImageView(myImage), startBox);
-        rulesPane.setCenter(stackPane);
-        
-        startGame.setOnAction(e -> primaryStage.setScene(sceneMap.get("category")));
-
-        return rulesScene;
-    }
-
 
     public Scene createGameScene(wordGuesserInfo serializable){
 
@@ -194,8 +191,6 @@ public class Game extends Application {
 
         //get number of letters from the server using getwordandsendback logic
     
-
-
         //Display number of guess attempt remaining, category name
         Text remainingGuesses = new Text("Remaining Guesses: " + serializable.getRemainingGuesses() + "   ");
         Text category = new Text(" Category: " + serializable.getCurrentCategory() + "    ");
@@ -214,6 +209,10 @@ public class Game extends Application {
         //code for square boxes
         Integer numLetters = serializable.getNumLetters();
         //make as many square boxes as the number of letters in the word
+
+        squaresBox.setSpacing(10);
+        squaresBox.setAlignment(Pos.CENTER);
+
         for(int i = 0; i < numLetters; i++) {
             Rectangle square = new Rectangle(150, 150);
             //fill with white color
@@ -336,7 +335,7 @@ public class Game extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws IOException {
             this.primaryStage = primaryStage;
             this.primaryStage.setTitle("Word Guesser Game");
 
@@ -346,6 +345,7 @@ public class Game extends Application {
             title.setStyle("-fx-font-size: 50px");
             title.setTextAlignment(TextAlignment.CENTER);
             title.setFill(Color.WHITE);
+
 
             // create a pane to display word guesser 1 .png in the center
             startPane = new BorderPane();
@@ -368,32 +368,87 @@ public class Game extends Application {
             startPane.setBottom(letterBox);
 
             Scene startScene = new Scene(startPane, 900, 600);
-            primaryStage.setScene(startScene);
-            primaryStage.show();
 
 
             sceneMap = new HashMap<String, Scene>();
+            //startScene is the client connection scene, where we ask for port number
             sceneMap.put("start", startScene);
+            //rulesScene is the scene that displays the rules of the game
             sceneMap.put("rules", createRulesScene());
+                
+            primaryStage.setScene(startScene);
+            primaryStage.show();
 
-
-            startClient.setOnAction(e -> {
+            //when startClient button is clicked
+            startClient.setOnAction (e -> {
                 //if port number is not empty, connect to server
-                if(!portNumber.getText().isEmpty()) {                       
-                    clientConnection = new Client(data -> {
-                        Platform.runLater(() -> {
-                            //receive data from server and initialize wordguesserinfo object
-                            serializable = (wordGuesserInfo) data;
-                            sceneMap.put("category", createCategoryScene(serializable));
+                if(!portNumber.getText().isEmpty()) {  
+
+                    Integer portNum = Integer.valueOf(portNumber.getText());
+
+                    if(portNum <= 0){
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setContentText("Please enter a valid port number");
+                        alert.showAndWait();
+                    }
+                    
+                    else { //successfully logs into the game, displays menu options
+            
+                        //menu bar with options to view rules and quit game
+                        MenuItem menu1 = new MenuItem("Rules");
+                        MenuItem menu2 = new MenuItem("Quit");
+            
+                        Menu menu = new Menu("Options", null, menu1, menu2);
+                        MenuBar menuBar = new MenuBar(menu);
+                        menuBar.getMenus().add(menu);
+                        
+                        BorderPane rootGame = new BorderPane();
+
+                        menu1.setOnAction((value)-> {
+                            primaryStage.setScene(sceneMap.get("rules"));
+                            primaryStage.show();
                         });
-                    });
 
-                    clientConnection.start();
+                        menu2.setOnAction((value)-> {
+                            Platform.exit();
+                            System.exit(0);
+                        });
 
-                    primaryStage.setScene(sceneMap.get("rules"));
-                    primaryStage.show();
-                }
-            });
+
+
+                        //as category is chosen, receive wordguesserinfo object from server at the SAME TIME, because the 
+                        //category scene is being called as of the moment.
+                        clientConnection = new Client(data -> {
+                            Platform.runLater(()->{
+                                wordGuesserInfo clientInfo = (wordGuesserInfo) data;
+
+                                Scene categoryScene = createCategoryScene(clientInfo);
+                                primaryStage.setScene(categoryScene);
+                                sceneMap.put("category", categoryScene);
+
+
+                                System.out.println("Client received: " + clientInfo);
+                                System.out.println(clientInfo.getCurrentCategory());
+                                //if category is chosen and number of letters is not 0, then display game scene
+                                if(clientInfo.categoryChosen == true && clientInfo.getNumLetters() != 0){
+                                    Scene gameScene = createGameScene(clientInfo);
+                                    primaryStage.setScene(gameScene);
+                                    sceneMap.put("game", gameScene);
+                                }
+
+                            });
+                        }, portNum);
+
+                        clientConnection.start();     
+
+                    }
+                                    
+                }//end of if portnumber is not empty
+
+
+
+
+            }); //end of startClient.setOnAction
     }
 
 

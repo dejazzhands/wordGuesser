@@ -55,8 +55,8 @@ public class GuiServer extends Application {
 					Platform.runLater(()->{
 						listItems.getItems().add(data.toString());
 					});
-	
 				}, port);
+
 				primaryStage.setScene(createServerGui());
 				primaryStage.setTitle("This is the Server");
 			} catch (Exception ex) {

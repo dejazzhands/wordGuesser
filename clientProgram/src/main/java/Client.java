@@ -9,44 +9,59 @@ import java.util.ArrayList;
 
 public class Client extends Thread {
 
+    int portNumber;
     Socket socketClient;
     ObjectOutputStream out;
     ObjectInputStream in;
 
     private Consumer<Serializable> callback;
-    private Consumer<wordGuesserInfo> wordguessInfo;
 
-    Client(Consumer<wordGuesserInfo> wordguessInfo) {
-        this.wordguessInfo = wordguessInfo; 
+    Client(Consumer<Serializable> call, int port) {
+        callback = call;
+        portNumber = port;  
     }
+
 
     public void run() {
         try {
-            socketClient = new Socket("127.0.0.1", 5555);
+            socketClient = new Socket("127.0.0.1", portNumber);
             out = new ObjectOutputStream(socketClient.getOutputStream());
             in = new ObjectInputStream(socketClient.getInputStream());
             socketClient.setTcpNoDelay(true);
-        } catch (Exception e) {
-            System.out.println("Client error");
+        } 
+        catch (Exception e) {
+            System.out.println("Connection error : Client did not connect to server");
             e.printStackTrace();
         }
 
         while (true) {
             try {
-                //accept wordGuesserInfo that is not null
-                wordGuesserInfo message = (wordGuesserInfo) in.readObject();
-                wordguessInfo.accept(message);
+                    wordGuesserInfo message = new wordGuesserInfo();
+                    message = (wordGuesserInfo) in.readObject();
+
+                    callback.accept(message);
+                    System.out.println("Client received wordGuesserInfo");
+
+                    //if the number of letters is not 0, that means the client has received updated wordguesserinfo after sending category
+                    if (message.getNumLetters() != 0) {
+                        System.out.println("Client received updated wordGuesserInfo after sending category");
+                        System.out.println("The number of letters is " + message.getNumLetters());
+                        break;
+                    }
+
             } catch (Exception e) {
-                System.out.println("Client error");
-                e.printStackTrace();    
+                System.out.println("Client error : Client did not receive wordGuesserInfo");
+                e.printStackTrace();
+                break; // Exit the loop when an exception occurs
             }
         }
+        
     }
 
 	public void send(wordGuesserInfo data) {
 		try {
+            out.reset();
 			out.writeObject(data);
-            out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

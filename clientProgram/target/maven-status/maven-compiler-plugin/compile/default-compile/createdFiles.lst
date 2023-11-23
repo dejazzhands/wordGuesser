@@ -3,4 +3,5 @@ Client.class
 Square.class
 Word.class
 Category.class
+Game.class
 wordGuesserInfo.class
