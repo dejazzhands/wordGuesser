@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class serverWordGuesserLogic {
     //global variable wordToGuess to store the random word selected from the category
     Word wordToGuess = new Word("");
-    private ArrayList<Character> guessedLetters; // This is to keep track of the letters that the user has guessed, regardless of whether they are correct or not
+    private ArrayList<Character> guessedLetters; // This is to keep track of the letters that the user has guessed correctly in the word
     private ArrayList<Category> categories;
     private int remainingGuessesPerWord; // This is to keep track of how many guesses the user has left for a word
     private int correctGuesses; // This is to keep track of how many letters the user has guessed correctly
@@ -206,8 +206,21 @@ public class serverWordGuesserLogic {
     }
 
     //function that takes a character and checks if its in the word
-    public wordGuesserInfo verifyGuessLetter(wordGuesserInfo info, String wordToGuess){
-        if(wordToGuess.)
+    public wordGuesserInfo verifyGuessLetter(wordGuesserInfo info, Word wordToGuess){
+        if(wordToGuess.getWord().contains(info.letterGuessbyClient.toString())){
+            info.correctLetterGuess = true;
+            guessedLetters.add(info.letterGuessbyClient);
+            System.out.println("The user guessed the letter " + info.letterGuessbyClient + " correctly!");
+        }
+        else{
+            info.incorrectLetterGuess = true;
+            info.remainingLetterGuesses--;
+            
+            System.out.println("The user guessed the letter " + info.letterGuessbyClient + " incorrectly!");
+        }
+        
+        info.letterGuessbyClient = ' ';
+
         return info;
     }
 

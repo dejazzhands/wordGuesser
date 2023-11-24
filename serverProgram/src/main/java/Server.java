@@ -15,7 +15,6 @@ public class Server {
 	TheServer server;
 	private Consumer<Serializable> callback;
 	int port;
-	Word wordGuess = new Word("");
 	serverWordGuesserLogic logic;
 	wordGuesserInfo info = new wordGuesserInfo();
 
@@ -89,10 +88,12 @@ public class Server {
 		int count;
 		ObjectInputStream in;
 		ObjectOutputStream out;
+		serverWordGuesserLogic logic;
 		
 		ClientThread(Socket s, int count){
 			this.connection = s;
 			this.count = count;	
+			this.logic = new serverWordGuesserLogic();
 		}
 		
 
@@ -127,7 +128,7 @@ public class Server {
 				try {
 
 					info = (wordGuesserInfo) in.readObject();
-					logic = new serverWordGuesserLogic();
+					
 					System.out.println("Client " + count + " sent: " + info.msg);
 					callback.accept(info);
 
@@ -137,22 +138,24 @@ public class Server {
 					if (info.categoryChosen == true && (info.currentCategory.equals("Fruits") || info.currentCategory.equals("Animals") || info.currentCategory.equals("Colors"))){
 						
 						// Generate the word only if it hasn't been generated yet, then apply getWordandSendBack to get the word and send back information to client.
-						if (wordGuess.getWord().isEmpty()) {
+						if (logic.wordToGuess.getWord().isEmpty()) {
 							info = logic.getWordandSendBack(info);
 						}
 						out.writeObject(info);
 						out.reset();
+
 					}
 
 					//add logic for new guesses here
 					if (info.letterGuessbyClient != ' '){
 						//print wordToGuess just to be sure it is initialized
-						System.out.println("The word to guess is " + wordGuess.getWord());
+						System.out.println("The word to guess is " + logic.wordToGuess.getWord());
 						//compare the letter guessed by the client to the wordToGuess
-						info = logic.verifyGuessLetter(info, wordGuess.getWord());
+						info = logic.verifyGuessLetter(info, logic.wordToGuess);
 						out.writeObject(info);
 						out.reset();
 					}
+
 
 				}
 				catch(Exception e) {

@@ -123,7 +123,7 @@ public class Game extends Application {
         return rulesScene;
     }
 
-    public Scene createCategoryScene(wordGuesserInfo serializable){
+    public Scene createCategoryScene(wordGuesserInfo clientInfo){
         BorderPane categoryPane = new BorderPane();
         categoryPane.setStyle("-fx-background-color: #FB5607");
 
@@ -148,26 +148,26 @@ public class Game extends Application {
 
         //setonaction for category buttons
         category1.setOnAction(e -> {
-            serializable.currentCategory = "Fruits";
-            serializable.categoryChosen = true;
-            clientConnection.send(serializable);
+            clientInfo.currentCategory = "Fruits";
+            clientInfo.categoryChosen = true;
+            clientConnection.send(clientInfo);
             System.out.println("Category 'Fruits' selected and sent to server.");
-            sceneMap.put("game", createGameScene(serializable));
+            sceneMap.put("game", createGameScene(clientInfo));
             primaryStage.setScene(sceneMap.get( "game"));
         });
 
         category2.setOnAction(e -> {
-            serializable.currentCategory = "Animals";
-            serializable.categoryChosen = true;
-            clientConnection.send(serializable);
+            clientInfo.currentCategory = "Animals";
+            clientInfo.categoryChosen = true;
+            clientConnection.send(clientInfo);
             System.out.println("Category 'Animals' selected and sent to server.");
 
         });
 
         category3.setOnAction(e -> {
-            serializable.currentCategory = "Colors";
-            serializable.categoryChosen = true;
-            clientConnection.send(serializable);
+            clientInfo.currentCategory = "Colors";
+            clientInfo.categoryChosen = true;
+            clientConnection.send(clientInfo);
             System.out.println("Category 'Colors' selected and sent to server.");
         });
 
@@ -188,7 +188,7 @@ public class Game extends Application {
 
 
 
-    public Scene createGameScene(wordGuesserInfo serializable){
+    public Scene createGameScene(wordGuesserInfo clientInfo){
 
         BorderPane gamePane = new BorderPane();
         gamePane.setStyle("-fx-background-color: #8338EC");
@@ -196,9 +196,9 @@ public class Game extends Application {
         //get number of letters from the server using getwordandsendback logic
     
         //Display number of guess attempt remaining, category name
-        Text remainingGuesses = new Text("Remaining Guesses for this Category: " + serializable.remainingCategoryGuesses + "   ");
-        Text category = new Text(" Category: " + serializable.currentCategory + "    ");
-        Text numofLetters = new Text("Number of Letters: " + serializable.numLetters);
+        Text remainingGuesses = new Text("Remaining Guesses for this Category: " + clientInfo.remainingCategoryGuesses + "   ");
+        Text category = new Text(" Category: " + clientInfo.currentCategory + "    ");
+        Text numofLetters = new Text("Number of Letters: " + clientInfo.numLetters);
 
         remainingGuesses.setFill(Color.WHITE);
         remainingGuesses.setFont(Font.font("Arial", FontWeight.BOLD, 14));
@@ -211,7 +211,7 @@ public class Game extends Application {
         HBox squaresBox = new HBox();
 
         //code for square boxes
-        Integer numLetters = serializable.numLetters;
+        Integer numLetters = clientInfo.numLetters;
         //make as many square boxes as the number of letters in the word
 
         squaresBox.setSpacing(10);
@@ -236,8 +236,8 @@ public class Game extends Application {
             if(guess.length() == 1) {
                 char letter = guess.charAt(0);
                 if(Character.isLetter(letter)) { //to check if user input is a letter.
-                    serializable.letterGuessbyClient = letter;
-                    clientConnection.send(serializable);
+                    clientInfo.letterGuessbyClient = letter;
+                    clientConnection.send(clientInfo);
                     System.out.println("Letter guess " + letter + " sent to server.");
                 }
             }

@@ -51,7 +51,6 @@ public class Client extends Thread {
 
                     //if the letterGuessbyClient is not null, that means the client has received updated wordguesserinfo after sending letter
                     if (message.letterGuessbyClient != ' ') {
-                        handleServerGuessResponse(message);
                         System.out.println("Client received updated wordGuesserInfo after sending letter");
                         System.out.println("The letter guessed by client is " + message.letterGuessbyClient);
                         break;
@@ -74,17 +73,5 @@ public class Client extends Thread {
 			e.printStackTrace();
 		}
 	}
-
-    //handle server response to incorrect and correct letter guesses
-    public void handleServerGuessResponse(wordGuesserInfo message) {
-        if (message.letterGuessbyClient != ' ') {
-            if(message.correctLetterGuess == true) {
-                System.out.println("Client guessed the letter correctly");
-            } 
-            else if (message.incorrectLetterGuess == true) {
-                System.out.println("Client guessed the letter incorrectly");
-            }
-        }
-    }
     
 }
