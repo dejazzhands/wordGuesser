@@ -33,14 +33,15 @@ import java.util.Optional;
 public class Game extends Application {
 
     TextField letterGuess, categoryChoice, portNumber, ipAddress, winDisplay = new TextField();
+    Text letterGuessedCorrectDisplay;
     Button startClient;
-    Stage primaryStage;
     HBox letterBox;
     Word targetWord;
     int remainingAttempts;
     Map<Character, Square> letterSquares;
 
     HashMap<String, Scene> sceneMap;
+    Stage primaryStage = new Stage();
     
 
     BorderPane startPane;
@@ -48,6 +49,7 @@ public class Game extends Application {
     VBox gameLayout, winMessages = new VBox();
     wordGuesserInfo serializable = new wordGuesserInfo();
     wordGuesserGameLogic gameLogic = new wordGuesserGameLogic();
+
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
@@ -146,29 +148,31 @@ public class Game extends Application {
 
         //setonaction for category buttons
         category1.setOnAction(e -> {
-            serializable.setCurrentCategory("Fruits");
-            serializable.setCategoryChosen(true);
+            serializable.currentCategory = "Fruits";
+            serializable.categoryChosen = true;
             clientConnection.send(serializable);
             System.out.println("Category 'Fruits' selected and sent to server.");
+            sceneMap.put("game", createGameScene(serializable));
+            primaryStage.setScene(sceneMap.get( "game"));
         });
 
         category2.setOnAction(e -> {
-            serializable.setCurrentCategory("Animals");
-            serializable.setCategoryChosen(true);
+            serializable.currentCategory = "Animals";
+            serializable.categoryChosen = true;
             clientConnection.send(serializable);
             System.out.println("Category 'Animals' selected and sent to server.");
+
         });
 
         category3.setOnAction(e -> {
-            serializable.setCurrentCategory("Colors");
-            serializable.setCategoryChosen(true);
+            serializable.currentCategory = "Colors";
+            serializable.categoryChosen = true;
             clientConnection.send(serializable);
             System.out.println("Category 'Colors' selected and sent to server.");
         });
 
-        
-        //update information on wordguesserinfo object
-        
+
+
         HBox categoryBox = new HBox(30, category1, category2, category3);
 
         VBox container = new VBox(200, categoryBox);
@@ -192,9 +196,9 @@ public class Game extends Application {
         //get number of letters from the server using getwordandsendback logic
     
         //Display number of guess attempt remaining, category name
-        Text remainingGuesses = new Text("Remaining Guesses: " + serializable.getRemainingGuesses() + "   ");
-        Text category = new Text(" Category: " + serializable.getCurrentCategory() + "    ");
-        Text numofLetters = new Text("Number of Letters: " + serializable.getNumLetters());
+        Text remainingGuesses = new Text("Remaining Guesses for this Category: " + serializable.remainingCategoryGuesses + "   ");
+        Text category = new Text(" Category: " + serializable.currentCategory + "    ");
+        Text numofLetters = new Text("Number of Letters: " + serializable.numLetters);
 
         remainingGuesses.setFill(Color.WHITE);
         remainingGuesses.setFont(Font.font("Arial", FontWeight.BOLD, 14));
@@ -207,7 +211,7 @@ public class Game extends Application {
         HBox squaresBox = new HBox();
 
         //code for square boxes
-        Integer numLetters = serializable.getNumLetters();
+        Integer numLetters = serializable.numLetters;
         //make as many square boxes as the number of letters in the word
 
         squaresBox.setSpacing(10);
@@ -225,6 +229,20 @@ public class Game extends Application {
         guessLetterField.setPromptText("Guess a single letter");
         Button submitGuess = new Button("Submit Guess");
         HBox guessLetterBox = new HBox(guessLetterField, submitGuess);
+
+        //set on action for submitGuess button. use letter in guessletterfield and set it to letterGuessbyClient
+        submitGuess.setOnAction(e -> {
+            String guess = guessLetterField.getText();
+            if(guess.length() == 1) {
+                char letter = guess.charAt(0);
+                if(Character.isLetter(letter)) { //to check if user input is a letter.
+                    serializable.letterGuessbyClient = letter;
+                    clientConnection.send(serializable);
+                    System.out.println("Letter guess " + letter + " sent to server.");
+                }
+            }
+        });
+
         
         gamePane.setCenter(squaresBox);
         gamePane.setBottom(guessLetterBox);
@@ -336,8 +354,10 @@ public class Game extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-            this.primaryStage = primaryStage;
-            this.primaryStage.setTitle("Word Guesser Game");
+
+            primaryStage.setTitle("Word Guesser Game");
+
+            final wordGuesserInfo[] infoArray = {new wordGuesserInfo()};
 
             //write title text on top of the image
             Text title = new Text("WORD GUESSER");
@@ -393,6 +413,7 @@ public class Game extends Application {
                     }
                     
                     else { //successfully logs into the game, displays menu options
+                        // START OF LOGIN BUTTON //
             
                         //menu bar with options to view rules and quit game
                         MenuItem menu1 = new MenuItem("Rules");
@@ -414,32 +435,45 @@ public class Game extends Application {
                             System.exit(0);
                         });
 
-
+                        rootGame.setTop(menuBar);
 
                         //as category is chosen, receive wordguesserinfo object from server at the SAME TIME, because the 
                         //category scene is being called as of the moment.
                         clientConnection = new Client(data -> {
+                            //non-visible text field to display the letters if they are guessed correctly
+                            Text letterGuessedCorrectDisplay = new Text();
+                            // client connection is established, and we are receiving data from the server. inside platform.runlater, we are
+                            // assigning the category and word length for the user, displaying the attempts remaining for the word, attempts for the category,
+                            // and how many words are guessed correctly.
                             Platform.runLater(()->{
                                 wordGuesserInfo clientInfo = (wordGuesserInfo) data;
-
+                                infoArray[0] = clientInfo;
+                                
                                 Scene categoryScene = createCategoryScene(clientInfo);
-                                primaryStage.setScene(categoryScene);
+                                //set scene to category scene, which will display the function createCategoryScene
+                                primaryStage.setScene(categoryScene);   
                                 sceneMap.put("category", categoryScene);
-
-
+                    
                                 System.out.println("Client received: " + clientInfo);
-                                System.out.println(clientInfo.getCurrentCategory());
-                                //if category is chosen and number of letters is not 0, then display game scene
-                                if(clientInfo.categoryChosen == true && clientInfo.getNumLetters() != 0){
+                                System.out.println("Category chosen by client " + clientInfo.currentCategory);
+
+
+
+                                if (clientInfo.numLetters != 0) {
+                                    System.out.println("Client received updated wordGuesserInfo after sending category");
+                                    System.out.println("The number of letters is " + clientInfo.numLetters);
+                                    //create game scene
                                     Scene gameScene = createGameScene(clientInfo);
+                                    //set scene to game scene, which will display the function createGameScene
                                     primaryStage.setScene(gameScene);
                                     sceneMap.put("game", gameScene);
                                 }
-
                             });
                         }, portNum);
 
                         clientConnection.start();     
+
+                        //use this remaining portion of the code to do submitguess request.
 
                     }
                                     

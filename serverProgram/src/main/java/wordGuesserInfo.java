@@ -5,111 +5,44 @@ public class wordGuesserInfo implements Serializable {
 
     Integer numLetters;
     Boolean correctLetterGuess;
-    Integer remainingGuesses;
+    Integer correctWordGuess;
+    Boolean incorrectLetterGuess;
+    Integer remainingLetterGuesses;
+    Integer remainingCategoryGuesses;
     String currentCategory; // This is the category that the user has chosen
     ArrayList<String> guessedWords;
     Boolean win;
     Boolean gameOver;
     Boolean categoryChosen; // This is to check if the user has chosen a category
+    Boolean guessDone; //This is to check if user guessed a letter, and so it's easy to tell when a new letter is guessed
     Character letterGuessbyClient;
     String msg;
-    
-    // Getter and setter methods for all the fields
-    public int getNumLetters() {
-        return numLetters;
-    }
+    String restartProtocol;
+    String guessProtocol;
+    //protocol strings
 
-    public void setNumLetters(int numLetters) {
-        this.numLetters = numLetters;
-    }
-
-    public void setLetterGuessbyClient(Character letterGuessbyClient) {
-        this.letterGuessbyClient = letterGuessbyClient;
-    }
-
-    public Character getLetterGuessbyClient() {
-        return letterGuessbyClient;
-    }
-
-    public boolean isCorrectLetterGuess() {
-        return correctLetterGuess;
-    }
-
-    public void setCorrectLetterGuess(boolean correctLetterGuess) {
-        this.correctLetterGuess = correctLetterGuess;
-    }
-
-    public int getRemainingGuesses() {
-        return remainingGuesses;
-    }
-
-    public void setRemainingGuesses(int remainingGuesses) {
-        this.remainingGuesses = remainingGuesses;
-    }
-
-    public String getCurrentCategory() {
-        return currentCategory;
-    }
-
-    public void setCurrentCategory(String currentCategory) {
-        this.currentCategory = currentCategory;
-    }
-
-    public ArrayList<String> getGuessedWords() {
-        return guessedWords;
-    }
-
-    public void setGuessedWords(ArrayList<String> guessedWords) {
-        this.guessedWords = guessedWords;
-    }
-
-    public boolean isWin() {
-        return win;
-    }
-
-    public void setWin(boolean win) {
-        this.win = win;
-    }
-
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
-    public void setCategoryChosen(boolean categoryChosen){
-        this.categoryChosen = categoryChosen;
-    }
-
-    public boolean isCategoryChosen(){
-        return categoryChosen;
-    }
-
-    public void setGameOver(boolean gameOver) {
-        this.gameOver = gameOver;
-    }
 
     public wordGuesserInfo() {
         this.numLetters = 0;
         this.correctLetterGuess = false;
-        this.remainingGuesses = 6;
+        this.incorrectLetterGuess = false;
+        this.remainingLetterGuesses = 6;
+        this.remainingCategoryGuesses = 3;
         this.currentCategory = "this is server";
         this.guessedWords = new ArrayList<>();
         this.win = false;
         this.gameOver = false;
         this.categoryChosen = false;
+        this.guessDone = false;
         this.letterGuessbyClient = ' ';
+        this.msg = "";
+        this.restartProtocol = "";
+        this.guessProtocol = "";
+        
     }
 
-
-    void restartGame() {
-        this.numLetters = 0;
-        this.correctLetterGuess = false;
-        this.remainingGuesses = 6;
-        this.currentCategory = "this is server";
-        this.guessedWords.clear();
-        this.win = false;
-        this.gameOver = false;
-        this.categoryChosen = false;
-        this.letterGuessbyClient = ' ';
+    void guessLetter(Character letter) {
+        this.letterGuessbyClient = letter;
     }
     
     

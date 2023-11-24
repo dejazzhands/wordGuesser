@@ -1,9 +1,9 @@
-import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class Word implements Serializable{
+public class Word{
     public String value;    
 
     Word(String value) {

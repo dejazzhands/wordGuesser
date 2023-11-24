@@ -43,9 +43,17 @@ public class Client extends Thread {
                     System.out.println("Client received wordGuesserInfo");
 
                     //if the number of letters is not 0, that means the client has received updated wordguesserinfo after sending category
-                    if (message.getNumLetters() != 0) {
+                    if (message.numLetters != 0) {
                         System.out.println("Client received updated wordGuesserInfo after sending category");
-                        System.out.println("The number of letters is " + message.getNumLetters());
+                        System.out.println("The number of letters is " + message.numLetters);
+                        break;
+                    }
+
+                    //if the letterGuessbyClient is not null, that means the client has received updated wordguesserinfo after sending letter
+                    if (message.letterGuessbyClient != ' ') {
+                        handleServerGuessResponse(message);
+                        System.out.println("Client received updated wordGuesserInfo after sending letter");
+                        System.out.println("The letter guessed by client is " + message.letterGuessbyClient);
                         break;
                     }
 
@@ -66,5 +74,17 @@ public class Client extends Thread {
 			e.printStackTrace();
 		}
 	}
+
+    //handle server response to incorrect and correct letter guesses
+    public void handleServerGuessResponse(wordGuesserInfo message) {
+        if (message.letterGuessbyClient != ' ') {
+            if(message.correctLetterGuess == true) {
+                System.out.println("Client guessed the letter correctly");
+            } 
+            else if (message.incorrectLetterGuess == true) {
+                System.out.println("Client guessed the letter incorrectly");
+            }
+        }
+    }
     
 }

@@ -15,9 +15,8 @@ public class Server {
 	TheServer server;
 	private Consumer<Serializable> callback;
 	int port;
-
-
-	serverWordGuesserLogic logic = new serverWordGuesserLogic();
+	Word wordGuess = new Word("");
+	serverWordGuesserLogic logic;
 	wordGuesserInfo info = new wordGuesserInfo();
 
 	Server(Consumer<Serializable> call, int portNum){ // Modify this line to accept the port number
@@ -123,21 +122,38 @@ public class Server {
 
 			while(true){
 
-				System.out.println("Waiting for client " + count + " input");
+				System.out.println("Game is running");
 
 				try {
 
 					info = (wordGuesserInfo) in.readObject();
+					logic = new serverWordGuesserLogic();
 					System.out.println("Client " + count + " sent: " + info.msg);
 					callback.accept(info);
 
+					// REMINDER: use if statements related to the states of variables in wordGuesserInfo to determine what to do next
+
 					//if the categorychosen is true and the currentcategory is either fruits, animals, or colors, then get the word and send it back
-					if (info.categoryChosen == true && (info.getCurrentCategory().equals("Fruits") || info.getCurrentCategory().equals("Animals") || info.getCurrentCategory().equals("Colors"))){
-						info = logic.getWordandSendBack(info);
+					if (info.categoryChosen == true && (info.currentCategory.equals("Fruits") || info.currentCategory.equals("Animals") || info.currentCategory.equals("Colors"))){
+						
+						// Generate the word only if it hasn't been generated yet, then apply getWordandSendBack to get the word and send back information to client.
+						if (wordGuess.getWord().isEmpty()) {
+							info = logic.getWordandSendBack(info);
+						}
 						out.writeObject(info);
 						out.reset();
 					}
-			
+
+					//add logic for new guesses here
+					if (info.letterGuessbyClient != ' '){
+						//print wordToGuess just to be sure it is initialized
+						System.out.println("The word to guess is " + wordGuess.getWord());
+						//compare the letter guessed by the client to the wordToGuess
+						info = logic.verifyGuessLetter(info, wordGuess.getWord());
+						out.writeObject(info);
+						out.reset();
+					}
+
 				}
 				catch(Exception e) {
 					info.msg = "OOPS something went wrong with the socket from client " + count + "....closing down!";
